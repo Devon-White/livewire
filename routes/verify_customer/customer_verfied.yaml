@@ -1,0 +1,3 @@
+- toggle_functions:
+                - active: true
+                  function: send_user_info

@@ -1,0 +1,9 @@
+SWML:
+  sections:
+    main:
+      - play:
+          url: "say: Sending the user info to the client. The name collected is {name}"
+        user_event:
+          event:
+            name: "{name}"
+            summary: "{summary}"

@@ -1,0 +1,6 @@
+Flask
+requests
+ngrok
+python-dotenv
+signalwire-swaig
+pyyaml
