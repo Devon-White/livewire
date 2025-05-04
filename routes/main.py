@@ -4,7 +4,7 @@ import os
 
 main_bp = Blueprint('main', __name__)
 
-main_swml_file = os.path.join("swml_responses", "main_swml.yaml")
+main_swml_file = os.path.join(os.path.dirname(__file__), "main_swml.yaml")
 public_url = None
 
 def set_public_url(url):

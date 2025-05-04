@@ -43,16 +43,6 @@ def load_swml_with_vars(swml_file, **kwargs):
         logging.error(f"Error loading {swml_file} with vars: {e}")
         return None
 
-def make_payload(public_url, swml_file):
-    swml_contents = load_swml_with_vars(swml_file, public_url=public_url)
-    if not swml_contents:
-        raise RuntimeError(f"{swml_file} is missing or invalid. Please provide valid SWML contents.")
-
-    return {
-        "name": "LiveWire",
-        "primary_request_url": f"{public_url.rstrip('/')}/swml"
-    }
-
 def create_swml_handler(headers, payload):
     response = requests.post(API_BASE, headers=headers, data=json.dumps(payload))
     if response.ok:
@@ -67,13 +57,16 @@ def create_swml_handler(headers, payload):
         logging.error(f"Failed to create External SWML Handler. Status code: {response.status_code}, Response: {response.text}")
     return response
 
-def update_swml_script(public_url, swml_file):
+def update_swml_script(public_url):
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Basic ' + BASE64_ENCODED_CREDENTIALS
     }
-    payload = make_payload(public_url, swml_file)
+    payload = {
+        "name": "LiveWire",
+        "primary_request_url": f"{public_url.rstrip('/')}/swml"
+    }
     swml_id = get_stored_id()
 
     if swml_id:

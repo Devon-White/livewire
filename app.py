@@ -30,6 +30,5 @@ if __name__ == '__main__':
     public_url = listener.url()
     print(f"ngrok tunnel running at: {public_url}")
     set_public_url(public_url)
-    main_swml_file = os.path.join("swml_responses", "main_swml.yaml")
-    update_swml_script(public_url, main_swml_file)
+    update_swml_script(public_url)
     app.run(debug=False, port=port)
