@@ -6,6 +6,8 @@
  * Modularized for maintainability and future scalability. Uses a simple state object for dashboard state.
  */
 
+import { showSpinner, hideSpinner } from './utils.js';
+
 // Clean up SignalWire SAT tokens to prevent cross-widget/session issues
 ['ci-SAT', 'pt-SAT', 'as-SAT'].forEach(key => sessionStorage.removeItem(key));
 
@@ -173,9 +175,19 @@ function resetAfterCallEnd() {
   setDashboardStatus('online');
 }
 
+const goOnlineSpinner = document.createElement('span');
+goOnlineSpinner.className = 'spinner-border text-info ms-2 hidden';
+goOnlineSpinner.style.width = '1.5rem';
+goOnlineSpinner.style.height = '1.5rem';
+goOnlineSpinner.setAttribute('role', 'status');
+if (goOnlineBtn && goOnlineBtn.parentNode) {
+  goOnlineBtn.parentNode.insertBefore(goOnlineSpinner, goOnlineBtn.nextSibling);
+}
+
 if (goOnlineBtn) goOnlineBtn.onclick = async () => {
   setDashboardStatus('connecting');
   goOnlineBtn.disabled = true;
+  showSpinner(goOnlineSpinner);
   goOnlineBtn.classList.add('hidden');
   let token = tokenInput ? tokenInput.value : '';
   const host = document.getElementById('host')?.value;
@@ -197,7 +209,6 @@ if (goOnlineBtn) goOnlineBtn.onclick = async () => {
         await DashboardState.client.online({ incomingCallHandlers: { all: handleIncomingCall } });
         return true;
       } catch (err) {
-        // If token error, fetch a new token and retry once
         if (!triedNewToken && (err.message?.includes('token') || err.message?.includes('401'))) {
           triedNewToken = true;
           const resp = await fetch('/api/create_sat', { method: 'POST' });
@@ -215,6 +226,7 @@ if (goOnlineBtn) goOnlineBtn.onclick = async () => {
     return false;
   }
   onlineSuccess = await tryOnlineWithRetry();
+  hideSpinner(goOnlineSpinner);
   if (onlineSuccess) {
     setDashboardStatus('online');
     if (goOfflineBtn) goOfflineBtn.classList.remove('hidden');

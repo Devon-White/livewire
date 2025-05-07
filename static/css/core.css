@@ -102,3 +102,9 @@ body {
 .status-connecting { background: #ffc107; }
 .status-online { background: #28a745; }
 .status-in-call { background: #f72a72; }
+
+.spinner-border.text-info {
+  color: var(--sw-blue) !important;
+  border-width: 0.2em;
+  border-right-color: var(--sw-pink) !important;
+}

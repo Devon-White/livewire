@@ -28,50 +28,16 @@
                             <label class="form-label">SignalWire Space Name</label>
                             <input type="text" name="space_name" class="form-control" required>
                         </div>
-                        <button type="submit" class="demo-button w-100 mt-3">Get Started</button>
+                        <button type="submit" class="demo-button w-100 mt-3" id="indexSubmitBtn">Get Started</button>
+                        <div id="indexLoading" class="text-center mt-3 hidden">
+                            <span class="spinner-border text-info" role="status" style="width:2rem;height:2rem;"></span>
+                            <span class="d-block mt-2">Connecting...</span>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-    document.getElementById('stage1').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = new FormData(form);
-
-      // Store credentials in session via POST to /
-      const resp = await fetch('/', {
-        method: 'POST',
-        body: data
-      });
-
-      if (resp.redirected) {
-        // Now create/update the SWML handler
-        const handlerResp = await fetch('/api/swml_handler', { method: 'POST' });
-        if (handlerResp.ok) {
-          // Now get widget config (guest token + destination)
-          const configResp = await fetch('/api/widget_config', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-          });
-          if (configResp.ok) {
-            const config = await configResp.json();
-            sessionStorage.setItem('widgetConfig', JSON.stringify(config));
-            window.location.href = '/call';
-          } else {
-            const err = await configResp.json();
-            alert('Failed to get widget config: ' + (err.error || configResp.status));
-          }
-        } else {
-          const err = await handlerResp.json();
-          alert('Failed to create SWML handler: ' + (err.error || handlerResp.status));
-        }
-      } else {
-        alert('Failed to store credentials.');
-      }
-    });
-    </script>
+    <script type="module" src="/static/js/index.js"></script>
 </body>
 </html> 

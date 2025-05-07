@@ -59,6 +59,13 @@ This project is a modular Flask application that serves as a backend for a Signa
 - Updated signup.html to load the new JS file.
 - Moved inline JS from index.html to static/js/index.js for consistency and maintainability.
 
+### 2024-06-12: UI/UX Improvements
+- Added a loading spinner/indicator to the login form that matches the current theme. Login is now handled via AJAX for better UX and error handling.
+- Styled the call button on the Calls page to match the theme and added a phone icon (SVG, Bootstrap style).
+- Added a reusable spinner style to core.css for consistent loading indicators.
+- Added a themed spinner to the subscribers dashboard when connecting to the client (goOnlineBtn click). Spinner is shown next to the button and hidden on completion/failure.
+- Added a themed spinner to the index page (SignalWire credentials form) during async submission, matching the login form's UX.
+
 ## Multi-Layer Session-Based Authentication
 
 The app now enforces a two-step authentication flow using session-based decorators:
