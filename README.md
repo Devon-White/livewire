@@ -88,5 +88,10 @@ Session flags (`sw_credentials_ok`, `subscriber_ok`) are set at the appropriate 
 
 See `mdc:scratchpad.md` for internal notes and integration details.
 
+## Features
+
+- **Create Member Modal**: When a `create_member` user event is received (e.g., from the call widget), a modal with the signup form is shown, overlaying the call widget. The form POSTs to `/api/create_member`.
+- **/api/create_member Endpoint**: New API endpoint that currently returns an empty 200 response. Intended for member creation logic in the future.
+
 ---
 For more details, see `scratchpad.md` for internal notes and ongoing documentation.

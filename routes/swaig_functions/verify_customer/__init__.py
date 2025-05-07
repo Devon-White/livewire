@@ -1,6 +1,6 @@
 import os
 from routes import swaig
-from signalwire_swaig import SWAIGArgument
+from signalwire_swaig import SWAIGArgument, SWAIGFunctionProperties
 from utils.swml_utils import load_swml_with_vars
 import logging
 
@@ -28,6 +28,14 @@ def get_customer_data(member_id):
 
 @swaig.endpoint(
     'The function to execute when we need to verify the customer account ID provided.',
+    SWAIGFunctionProperties(
+        fillers={
+            "default": [
+                "Thank you, let me verify the member id you provided.",
+                "Excellent, verying your member id now, one second please."
+            ]
+        }
+    ),
     member_id=SWAIGArgument(type="string", required=True, description="The member ID to verify")
 )
 def verify_customer_id(member_id: str, **kwargs):
@@ -42,10 +50,6 @@ def verify_customer_id(member_id: str, **kwargs):
         logger.info(result)
         return result, swml
     else:
-        swml = load_swml_with_vars(
-            swml_file=customer_not_found_yaml,
-            member_id=member_id
-        )
-        result = f"Customer data not found for {member_id}. The user needs to try again."
+        result = f"Customer data not found for {member_id}. The user needs to provide a valid member id."
         logger.info(result)
-        return result, swml
+        return result

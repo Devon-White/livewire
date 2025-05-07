@@ -10,3 +10,5 @@
             to: "{subscriber_address}"
             status_url: "{status_callback_url}"
             call_state_events: ['ended']
+- stop: true
+

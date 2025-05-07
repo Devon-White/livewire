@@ -12,7 +12,15 @@ send_user_info_yaml = os.path.join(os.path.dirname(__file__), "send_user_info.ya
 
 @swaig.endpoint(
     'The function to execute when we need to send the user info to the client.',
-    SWAIGFunctionProperties(active=False),
+    SWAIGFunctionProperties(
+        active=False,
+        fillers={
+            "default": [
+                "Thank you ${args.first_name} ${args.last_name}, I am transferring you to the next available agent.",
+
+            ]
+        }
+        ),
     first_name=SWAIGArgument(type="string", required=True, description="The user's first name"),
     last_name=SWAIGArgument(type="string", required=True, description="The user's last name"),
     summary=SWAIGArgument(type="string", required=True, description="The user's summary"),
@@ -39,6 +47,6 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
         logger.info(f"Stored call info for call_id {call_id}: {get_call_info_store()[call_id]}")
     else:
         logger.warning("No call_id found to store call info!")
-    result = f"Sending the user info to the client"
+    result = f"Sending form to the user now"
     logger.info(result)
     return result, swml 
