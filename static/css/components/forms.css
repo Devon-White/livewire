@@ -1,3 +1,8 @@
+/*
+ * forms.css
+ * Shared form styles for the site.
+ * Contains styles for form controls and alerts.
+ */
 input.form-control, select.form-control {
   background: rgba(255,255,255,0.08);
   color: #fff;

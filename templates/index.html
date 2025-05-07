@@ -3,85 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Server Home</title>
+    <title>Welcome - LiveWire SignalWire Demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <!-- SignalWire Navbar -->
-    <header class="navbar navbar-dark sw-glass border-bottom py-3 mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="https://signalwire.com" target="_blank">
-                <span class="sw-logo" title="SignalWire Logo" aria-label="SignalWire Logo"></span>
-            </a>
-            <div>
-                <a class="text-white text-decoration-none me-3" href="/">Home</a>
-                <a class="text-white text-decoration-none me-3" href="/login">Subscriber login</a>
-                <a class="text-white text-decoration-none me-3" href="https://developer.signalwire.com" target="_blank">Documentation</a>
-                <a class="text-white text-decoration-none" href="https://github.com/signalwire" target="_blank">GitHub</a>
+    {% include '_navbar.html' %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="sw-glass p-5 rounded shadow-lg">
+                    <h1 class="sw-gradient-text mb-4">Welcome to LiveWire SignalWire Demo</h1>
+                    <p class="mb-4">Enter your SignalWire credentials to get started. These are stored only for your session.</p>
+                    <form id="stage1" autocomplete="off">
+                        <div class="mb-3">
+                            <label class="form-label">SignalWire Project ID</label>
+                            <input type="text" name="project_id" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SignalWire Auth Token</label>
+                            <input type="password" name="auth_token" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SignalWire Space Name</label>
+                            <input type="text" name="space_name" class="form-control" required>
+                        </div>
+                        <button type="submit" class="demo-button w-100 mt-3">Get Started</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </header>
-    <div class="container py-5">
-        <h1 class="sw-gradient-text mb-4">Welcome to the Simple Server!</h1>
-        <p class="lead">This is the homepage served by Express.</p>
-        <button id="callButton" class="demo-button-disabled">Call Now</button>
-        <c2c-widget
-            callDetails='{"destination": "/public/livewire", "supportsVideo": false, "supportsAudio": true}'
-            collectUserDetails="false"
-            userVariables='{"test": "john.doe@example.com"}'
-            buttonId="callButton"
-        ></c2c-widget>
     </div>
     <script>
-        async function init() {
-            const widget = document.querySelector("c2c-widget");
-            const token = await getWidgetToken();
-            widget.setAttribute("token", token);
-            console.log(widget);
+    document.getElementById('stage1').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
 
-            widget.addEventListener("beforecall", async () => {
-                console.log("beforecall");
-            });
+      // Store credentials in session via POST to /
+      const resp = await fetch('/', {
+        method: 'POST',
+        body: data
+      });
 
-            widget.addEventListener("call.joined", ({ detail }) => {
-                const client = detail.client;
-                client.on("user_event", (params) => {
-                    handleUserEvents(params);
-                });
-                console.log("call.joined", detail);
-            });
-
-            widget.addEventListener("call.left", ({ detail }) => {
-                console.log("call.left", detail);
-            });
+      if (resp.redirected) {
+        // Now create/update the SWML handler
+        const handlerResp = await fetch('/api/swml_handler', { method: 'POST' });
+        if (handlerResp.ok) {
+          // Now get widget config (guest token + destination)
+          const configResp = await fetch('/api/widget_config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+          });
+          if (configResp.ok) {
+            const config = await configResp.json();
+            sessionStorage.setItem('widgetConfig', JSON.stringify(config));
+            window.location.href = '/call';
+          } else {
+            const err = await configResp.json();
+            alert('Failed to get widget config: ' + (err.error || configResp.status));
+          }
+        } else {
+          const err = await handlerResp.json();
+          alert('Failed to create SWML handler: ' + (err.error || handlerResp.status));
         }
-
-        async function getWidgetToken() {
-            const response = await fetch("/api/get_embed_token", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to authenticate embeds token", response.status);
-            }
-
-            const data = await response.json();
-            return data.token;
-        }
-
-        async function handleUserEvents(params) {
-            switch (params.type) {
-                case "send_user_info":
-                    console.log("send_user_info", params);
-                    break;
-            }
-        }
-        init();
+      } else {
+        alert('Failed to store credentials.');
+      }
+    });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@niravcodes/call-widget@latest/dist/c2c-widget-full.umd.min.js"></script>
 </body>
-</html>
+</html> 

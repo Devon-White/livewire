@@ -1,7 +1,7 @@
 import os
 from routes import swaig
 from signalwire_swaig import SWAIGArgument
-from setup import load_swml_with_vars
+from utils.swml_utils import load_swml_with_vars
 import logging
 
 logger = logging.getLogger(__name__)

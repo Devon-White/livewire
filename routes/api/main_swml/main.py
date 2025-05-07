@@ -1,6 +1,6 @@
 from .. import api_bp
 from flask import jsonify, current_app
-from setup import load_swml_with_vars
+from utils.swml_utils import load_swml_with_vars
 import os
 import logging
 

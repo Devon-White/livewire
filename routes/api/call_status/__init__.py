@@ -1,6 +1,6 @@
 from .. import api_bp
 from flask import request, jsonify
-from stores.call_info_store import call_info_store
+from stores.call_info_store import get_call_info_store
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,5 +13,5 @@ def call_status():
     peer_call_id = params.get('peer', {}).get('call_id')
 
     if peer_call_id:
-      call_info_store.pop(peer_call_id, None)
+      get_call_info_store().pop(peer_call_id, None)
     return jsonify({'success': True}) 

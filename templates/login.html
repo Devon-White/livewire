@@ -7,12 +7,9 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
+    {% include '_navbar.html' %}
     <div class="container d-flex align-items-center justify-content-center" style="min-height: 90vh;">
       <div class="sw-glass p-5 rounded shadow-lg" style="max-width: 400px; width: 100%;">
-        <div class="text-center mb-4">
-          <span class="sw-logo" title="SignalWire Logo" aria-label="SignalWire Logo"></span>
-          <h2 class="sw-gradient-text mt-3 mb-0">Login</h2>
-        </div>
         {% if error %}
           <div class="alert alert-danger">{{ error }}</div>
         {% endif %}

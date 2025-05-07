@@ -1,8 +1,15 @@
+/*
+ * core.css
+ * Core site-wide styles, variables, and utility classes.
+ * Contains global color variables, backgrounds, glass effect, buttons, logo, and shared UI elements.
+ * Shared classes (e.g., .agent-avatar, .agent-status, .status-dot) are defined here for DRYness.
+ */
 :root {
   --sw-pink: #f72a72;
   --sw-blue: #044ef4;
   --sw-dark: #070c2d;
   --sw-gradient: linear-gradient(to right, var(--sw-pink), var(--sw-blue));
+  --sw-gray-bg: #181d2f;
 }
 
 body {
@@ -45,6 +52,10 @@ body {
   box-shadow: 0 6px 20px rgba(247, 42, 114, 0.4);
 }
 
+.demo-button-disabled {
+  display: none;
+}
+
 .sw-logo {
   display: inline-block;
   background: url('https://raw.githubusercontent.com/signalwire/docs/10096406ad91fad1c54457ee9c0cd773508eb6d6/static/img/logo-dark.svg') no-repeat center center;
@@ -58,4 +69,36 @@ body {
 
 .hidden {
   display: none;
-} 
+}
+
+/* Shared agent/dashboard styles */
+.agent-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--sw-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-right: 1em;
+}
+.agent-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+}
+.status-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5em;
+}
+.status-offline { background: #888; }
+.status-connecting { background: #ffc107; }
+.status-online { background: #28a745; }
+.status-in-call { background: #f72a72; }

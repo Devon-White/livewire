@@ -1,3 +1,8 @@
+/*
+ * styles.css
+ * Main CSS entry point for the site.
+ * Imports core, component, and (optionally) page-specific styles.
+ */
 @import url('core.css');
 @import url('components/navbar.css');
 @import url('components/forms.css');

@@ -22,13 +22,6 @@ def create_app():
 
 def setup_app_config(app, **kwargs):
     app.config['PUBLIC_URL'] = kwargs.get('public_url')
-    app.config['C2C_TOKEN'] = os.getenv('C2C_TOKEN')
-    app.config['SIGNALWIRE_AUTH'] = (
-        "Basic " +
-        base64.b64encode(
-            f"{os.getenv('SIGNALWIRE_PROJECT')}:{os.getenv('SIGNALWIRE_TOKEN')}".encode()
-        ).decode()
-    )
 
 if __name__ == '__main__':
     load_dotenv()
@@ -38,5 +31,4 @@ if __name__ == '__main__':
     public_url = listener.url()
     logger.info(f"ngrok tunnel running at: {public_url}")
     setup_app_config(app, public_url=public_url)
-    update_swml_script(public_url, app.config['SIGNALWIRE_AUTH'])
     app.run(debug=False, port=port)

@@ -1,20 +1,9 @@
-.agent-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  font-weight: 600;
-}
-.status-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 0.5em;
-}
-.status-offline { background: #888; }
-.status-connecting { background: #ffc107; }
-.status-online { background: #28a745; }
-.status-in-call { background: #f72a72; }
+/*
+ * subscribers.css
+ * Page-specific styles for the agent dashboard (subscriber.html).
+ * Contains dashboard layout, modal, and call control styles.
+ * Shared agent/dashboard styles are now in core.css.
+ */
 .dashboard-card {
   background: rgba(12, 19, 57, 0.85);
   border-radius: 18px;
@@ -34,38 +23,6 @@
   justify-content: center;
   margin-top: 1em;
 }
-.agent-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--sw-gradient);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-right: 1em;
-}
-.topbar {
-  background: rgba(12, 19, 57, 0.95);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding: 0.7em 0;
-  margin-bottom: 2em;
-}
-.topbar .sw-logo {
-  margin-right: 1.5em;
-}
-.topbar-actions a {
-  color: #fff;
-  margin-left: 1.2em;
-  text-decoration: none;
-  font-weight: 500;
-}
-.topbar-actions a:hover {
-  color: var(--sw-pink);
-}
-
 .agent-email {
   color: #e0e6f0;
   font-size: 0.98em;
@@ -104,4 +61,4 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-} 
+}

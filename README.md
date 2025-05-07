@@ -39,5 +39,47 @@ This project is a modular Flask application that serves as a backend for a Signa
   - Reverts to 'Waiting for call...' after a call ends or is hung up.
 - Ensures the UI always reflects the current call state.
 
+### 2024-06-10: Front-End Refactor
+- Created a shared Jinja2 navbar include (`_navbar.html`) and replaced hardcoded navbars in all templates.
+- Moved all agent dashboard JavaScript from `subscriber.html` to `static/js/agent_dashboard.js`.
+- Removed redundant `setStatus` function; only `setDashboardStatus` is used.
+- Cleaned up CSS: removed obsolete `.topbar` and `.topbar-actions` styles, ensured navbar and agent status styles are in `navbar.css`.
+- Added `.demo-button-disabled` style to `core.css` for clarity and accessibility.
+- All templates now use the shared navbar for DRYness and consistency.
+- Improved maintainability and modularity of front-end code.
+
+### 2024-06-11: Front-End Naming Consistency
+- Renamed `static/css/pages/agent_dashboard.css` to `static/css/pages/subscribers.css` to match `subscribers.js` and `subscriber.html`.
+- Updated all references in `subscriber.html` and elsewhere as needed for consistency.
+
+### 2024-06-11: Front-End Cleanup and DRY Refactor
+- Moved shared agent/dashboard styles (.agent-avatar, .agent-status, .status-dot, etc.) from navbar.css and subscribers.css to core.css for DRYness.
+- Added documentation comments to all CSS files describing their purpose.
+- Moved inline JS from signup.html to static/js/signup.js for maintainability.
+- Updated signup.html to load the new JS file.
+- Moved inline JS from index.html to static/js/index.js for consistency and maintainability.
+
+## Multi-Layer Session-Based Authentication
+
+The app now enforces a two-step authentication flow using session-based decorators:
+
+1. **SignalWire Credentials Required**
+   - Users must provide valid SignalWire credentials on the index page before accessing `/call`, `/login`, or `/signup`.
+   - Enforced by the `@require_sw_credentials` decorator (see `utils/auth_decorators.py`).
+
+2. **Subscriber Login Required**
+   - After providing credentials, users must log in as a subscriber to access `/subscriber`.
+   - Enforced by the `@require_subscriber_login` decorator (see `utils/auth_decorators.py`).
+
+Session flags (`sw_credentials_ok`, `subscriber_ok`) are set at the appropriate points in the flow. Unauthorized access attempts are redirected with a helpful flash message.
+
+### Guest Token Flow (2024-06-12)
+- The app now uses SignalWire guest tokens for call widget authentication.
+- Only SignalWire credentials are required; C2C tokens are no longer used or requested.
+- The guest token is generated using the SWML handler ID as the allowed address.
+- The onboarding flow is now a single step: enter credentials, the app creates/updates the SWML handler, fetches the guest token, and redirects to the call page.
+
+See `mdc:scratchpad.md` for internal notes and integration details.
+
 ---
 For more details, see `scratchpad.md` for internal notes and ongoing documentation.

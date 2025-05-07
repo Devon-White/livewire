@@ -4,15 +4,29 @@ from werkzeug.security import generate_password_hash
 import requests
 import os
 import logging
-
-user_store = {}  # {email: {password_hash, subscriber_id}}
+import base64
+from stores.user_store import get_user_store
+from utils.auth_decorators import require_sw_credentials
 
 logger = logging.getLogger(__name__)
 
 @html_bp.route('/signup', methods=['GET', 'POST'])
+@require_sw_credentials(redirect_if_missing='html.index')
 def signup():
     error = None
     prefill_email = ''
+    project_id = session.get('sw_project_id')
+    auth_token = session.get('sw_auth_token')
+    space_name = session.get('sw_space_name')
+    if not (project_id and auth_token and space_name):
+        error = 'SignalWire credentials missing from session. Please provide your credentials on the homepage.'
+        return redirect(url_for('html.index'))
+    auth = base64.b64encode(f"{project_id}:{auth_token}".encode()).decode()
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': f'Basic {auth}'
+    }
     if request.method == 'POST':
         email = request.form['email'].strip().lower()
         password = request.form['password']
@@ -29,16 +43,10 @@ def signup():
         # Confirm password check
         if password != confirm_password:
             error = 'Passwords do not match.'
-        elif email in user_store:
+        elif email in get_user_store():
             error = 'Email already registered.'
         else:
-            SIGNALWIRE_SPACE = os.getenv('SIGNALWIRE_SPACE')
-            api_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/fabric/resources/subscribers"
-            headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': current_app.config['SIGNALWIRE_AUTH']
-            }
+            api_url = f"https://{space_name}.signalwire.com/api/fabric/resources/subscribers"
             # Try to find existing subscriber by email
             try:
                 get_headers = headers.copy()
@@ -124,7 +132,7 @@ def signup():
                             error = f"Failed to update subscriber: {resp.text}"
                             return render_template('signup.html', error=error, email=prefill_email)
                 # Store user
-                user_store[email] = {
+                get_user_store()[email] = {
                     'password_hash': generate_password_hash(password),
                     'subscriber_id': subscriber_id,
                     'display_name': display_name,

@@ -3,32 +3,42 @@ from flask import render_template, request, redirect, url_for, session, current_
 from werkzeug.security import check_password_hash
 import requests
 import os
-
-from routes.html.signup import user_store
+import logging
+import base64
+from stores.user_store import get_user_store
+from utils.auth_decorators import require_sw_credentials
 
 @html_bp.route('/login', methods=['GET', 'POST'])
+@require_sw_credentials(redirect_if_missing='html.index')
 def login():
     error = None
     prefill_email = request.args.get('prefill_email', '')
+    project_id = session.get('sw_project_id')
+    auth_token = session.get('sw_auth_token')
+    space_name = session.get('sw_space_name')
+    if not (project_id and auth_token and space_name):
+        error = 'SignalWire credentials missing from session. Please provide your credentials on the homepage.'
+        return redirect(url_for('html.index'))
+    auth = base64.b64encode(f"{project_id}:{auth_token}".encode()).decode()
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': f'Basic {auth}'
+    }
     if request.method == 'POST':
         email = request.form['email'].strip().lower()
         password = request.form['password']
-        user = user_store.get(email)
+        user = get_user_store().get(email)
         if user and check_password_hash(user['password_hash'], password):
             # Verify subscriber exists on SignalWire
-            SIGNALWIRE_SPACE = os.getenv('SIGNALWIRE_SPACE')
             subscriber_id = user['subscriber_id']
-            get_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/fabric/resources/subscribers/{subscriber_id}"
-            headers = {
-                'Accept': 'application/json',
-                'Authorization': current_app.config['SIGNALWIRE_AUTH']
-            }
+            get_url = f"https://{space_name}.signalwire.com/api/fabric/resources/subscribers/{subscriber_id}"
             try:
                 resp = requests.get(get_url, headers=headers)
                 if not resp.ok:
                     error = 'Subscriber no longer exists. Please contact support.'
                 else:
                     session['user_email'] = email
+                    session['subscriber_ok'] = True
                     return redirect(url_for('html.subscriber_page'))
             except Exception as e:
                 error = f"Error: {e}"

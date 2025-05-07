@@ -1,3 +1,9 @@
+/*
+ * navbar.css
+ * Shared navigation bar styles for the site.
+ * Contains styles for the header, nav links, dropdowns, and navbar-specific elements.
+ * Shared agent/dashboard styles are now in core.css.
+ */
 header.navbar {
   border-bottom: 2px solid transparent;
   border-image: var(--sw-gradient) 1;
@@ -18,6 +24,42 @@ header .navbar-nav a, header .navbar a {
 }
 header .navbar-nav a:last-child, header .navbar a:last-child {
   margin-right: 0;
+}
+header.navbar a,
+header .navbar a,
+header .topbar-actions .dropdown-toggle {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+header.navbar a:hover,
+header .navbar a:hover,
+header .topbar-actions .dropdown-toggle:hover,
+header .topbar-actions .dropdown-toggle:focus {
+  color: var(--sw-pink);
+}
+.topbar-actions .dropdown-toggle {
+  border: none;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  color: white;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.topbar-actions .dropdown-toggle .bi {
+  color: inherit;
+  font-size: 1.3em;
+  vertical-align: middle;
+}
+.topbar-actions .dropdown-toggle:hover .bi,
+.topbar-actions .dropdown-toggle:focus .bi {
+  color: var(--sw-pink);
+}
+.topbar-actions .dropdown-toggle::after {
+  color: inherit;
 }
 
 .dropdown-menu {
@@ -41,4 +83,6 @@ header .navbar-nav a:last-child, header .navbar a:last-child {
 }
 .dropdown-divider {
   border-top: 1px solid #2a2f4a;
-} 
+}
+
+/* Add/adjust styles for shared navbar include if needed */ 
