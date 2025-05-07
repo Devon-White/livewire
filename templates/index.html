@@ -1,43 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@niravcodes/call-widget/dist/c2c-widget-full.umd.min.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Server Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <h1>Welcome to the Simple Server!</h1>
-    <p>This is the homepage served by Express.</p>
-    <button id="callButton">Call Now</button>
-    <c2c-widget
-      collectUserDetails="false"
-      userVariables='{"test":"john.doe@example.com"}'
-      buttonId="callButton"
-      callDetails='{"destination":"/public/livewire","supportsVideo":false,"supportsAudio":true}'
-      token="eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc3dpcmUuaW8iLCJ0eXAiOiJTQVQifQ..s8N0kcqEgiaKFGgo.nF7T8hZYeebiXLE67Y5T3SZkoRp2WUQKyIHOkoXfOs5ejUE3kKwNSUoKVAcRY2SkwH-_ZJNjZJUjwSB2aAGlIwDZ4obF85pYxk1Pk2Z8blVakNNi5S2oA4aqknv-X6ToteLMn_PvPUMtEaIF06AKtqbrrrCh3sEym2UBsdVqc8lE9sInBJS0KwclZuHv0zDEqxv85Sh_63SphfAqfOiWMZYxOgxnLsKgy6owIlt2AbQWuM7XwMDz289w-9pm9FcAFFPyAKKlawlT1Cv3u4ALyrR2bKaF1SPvo8Ur46z2Ha5dtpOzvh2huVrTbfX7zxi_gvFSygWSaMr9skYML4mrpBpKn-_BUDRsS-cGHu2pv_rxjqGPWoRf7VjImbOnuqpZViYjOm2CKKmiAYXPRyGAsGLaQEZ76kqX-ea9B5Vk_brI1OBVi2hLKtf3nS3DVdF0BrMucJ-NHhO9VzIKp82A2pAS5epve-UwIST6aP1ZGr3JcyZpnBOlIMP8SBwRXi7V4dFikiIT9KdNTKdl.bil-pv1kfuiagT7bRebW1g"
-    ></c2c-widget>
-
+    <!-- SignalWire Navbar -->
+    <header class="navbar navbar-dark sw-glass border-bottom py-3 mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="https://signalwire.com" target="_blank">
+                <span class="sw-logo" title="SignalWire Logo" aria-label="SignalWire Logo"></span>
+            </a>
+            <div>
+                <a class="text-white text-decoration-none me-3" href="/">Home</a>
+                <a class="text-white text-decoration-none me-3" href="/login">Subscriber login</a>
+                <a class="text-white text-decoration-none me-3" href="https://developer.signalwire.com" target="_blank">Documentation</a>
+                <a class="text-white text-decoration-none" href="https://github.com/signalwire" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </header>
+    <div class="container py-5">
+        <h1 class="sw-gradient-text mb-4">Welcome to the Simple Server!</h1>
+        <p class="lead">This is the homepage served by Express.</p>
+        <button id="callButton" class="demo-button-disabled">Call Now</button>
+        <c2c-widget
+            callDetails='{"destination": "/public/livewire", "supportsVideo": false, "supportsAudio": true}'
+            collectUserDetails="false"
+            userVariables='{"test": "john.doe@example.com"}'
+            buttonId="callButton"
+        ></c2c-widget>
+    </div>
     <script>
-        const widget2 = document.querySelector("c2c-widget");
-        console.log(widget2);
-        widget2.addEventListener("beforecall", () => {
-          console.log("beforecall");
-        });
-        widget2.addEventListener("call.joined", ({ detail }) => {
-            const client = detail.client;
-            client.on("user_event", (params) => {
-                console.log("user_event params", params);
+        async function init() {
+            const widget = document.querySelector("c2c-widget");
+            const token = await getWidgetToken();
+            widget.setAttribute("token", token);
+            console.log(widget);
+
+            widget.addEventListener("beforecall", async () => {
+                console.log("beforecall");
             });
-          console.log("call.joined", detail);
 
-          
-        });
-        widget2.addEventListener("call.left", ({detail}) => {
-          console.log("call.left", detail);
-        });
-      </script>
+            widget.addEventListener("call.joined", ({ detail }) => {
+                const client = detail.client;
+                client.on("user_event", (params) => {
+                    handleUserEvents(params);
+                });
+                console.log("call.joined", detail);
+            });
 
+            widget.addEventListener("call.left", ({ detail }) => {
+                console.log("call.left", detail);
+            });
+        }
+
+        async function getWidgetToken() {
+            const response = await fetch("/api/get_embed_token", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to authenticate embeds token", response.status);
+            }
+
+            const data = await response.json();
+            return data.token;
+        }
+
+        async function handleUserEvents(params) {
+            switch (params.type) {
+                case "send_user_info":
+                    console.log("send_user_info", params);
+                    break;
+            }
+        }
+        init();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@niravcodes/call-widget@latest/dist/c2c-widget-full.umd.min.js"></script>
 </body>
-</html> 
+</html>

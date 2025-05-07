@@ -1,8 +1,10 @@
 import os
 from routes import swaig
-from swaig import SWAIGArgument
+from signalwire_swaig import SWAIGArgument
 from setup import load_swml_with_vars
+import logging
 
+logger = logging.getLogger(__name__)
 
 customer_verified_yaml = os.path.join(os.path.dirname(__file__), "customer_verified.yaml")
 customer_not_found_yaml = os.path.join(os.path.dirname(__file__), "customer_not_found.yaml")
@@ -19,7 +21,7 @@ def get_customer_data(member_id):
         }
     ]
     for customer in CUSTOMER_DATA:
-        if customer["member_id"] == member_id:
+        if customer["member_id"].lower() == member_id.lower():
             return customer
     return None
 
@@ -29,15 +31,15 @@ def get_customer_data(member_id):
     member_id=SWAIGArgument(type="string", required=True, description="The member ID to verify")
 )
 def verify_customer_id(member_id: str, **kwargs):
-    print(f"Verifying customer data for {member_id}")
-    print(kwargs)
+    logger.info(f"Verifying customer data for {member_id}")
+    logger.info(kwargs)
     customer_data = get_customer_data(member_id)
     if customer_data:
         swml = load_swml_with_vars(
             swml_file=customer_verified_yaml
         )
         result = f"Customer data verified for {member_id}. Welcome the user by {customer_data['first_name']} {customer_data['last_name']}."
-        print(result)
+        logger.info(result)
         return result, swml
     else:
         swml = load_swml_with_vars(
@@ -45,5 +47,5 @@ def verify_customer_id(member_id: str, **kwargs):
             member_id=member_id
         )
         result = f"Customer data not found for {member_id}. The user needs to try again."
-        print(result)
+        logger.info(result)
         return result, swml

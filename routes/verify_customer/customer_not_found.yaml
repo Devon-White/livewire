@@ -1,6 +1,0 @@
-SWML:
-  sections:
-    main:
-      - play:
-          url: "say: Customer data not found for {member_id}. Ending call."
-        hangup: {}

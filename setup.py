@@ -8,14 +8,15 @@ import yaml
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+logger = logging.getLogger(__name__)
 
 SIGNALWIRE_SPACE = os.getenv("SIGNALWIRE_SPACE")
 SIGNALWIRE_PROJECT = os.getenv("SIGNALWIRE_PROJECT")
 SIGNALWIRE_TOKEN = os.getenv("SIGNALWIRE_TOKEN")
-API_BASE = f"https://{SIGNALWIRE_SPACE}.swire.io/api/fabric/resources/external_swml_handlers"
+API_BASE = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/fabric/resources/external_swml_handlers"
 ID_FILE = "swml_id.txt"
 
-print(SIGNALWIRE_SPACE, SIGNALWIRE_PROJECT, SIGNALWIRE_TOKEN)
+logger.info(f"SIGNALWIRE_SPACE: {SIGNALWIRE_SPACE}, SIGNALWIRE_PROJECT: {SIGNALWIRE_PROJECT}, SIGNALWIRE_TOKEN: {SIGNALWIRE_TOKEN}")
 
 BASE64_ENCODED_CREDENTIALS = base64.b64encode(f"{SIGNALWIRE_PROJECT}:{SIGNALWIRE_TOKEN}".encode()).decode()
 
@@ -57,15 +58,15 @@ def create_swml_handler(headers, payload):
         logging.error(f"Failed to create External SWML Handler. Status code: {response.status_code}, Response: {response.text}")
     return response
 
-def update_swml_script(public_url):
+def update_swml_script(public_url, auth):
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Basic ' + BASE64_ENCODED_CREDENTIALS
+        'Authorization': auth
     }
     payload = {
         "name": "LiveWire",
-        "primary_request_url": f"{public_url.rstrip('/')}/swml"
+        "primary_request_url": f"{public_url.rstrip('/')}/api/swml"
     }
     swml_id = get_stored_id()
 

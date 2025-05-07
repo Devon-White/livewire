@@ -3,32 +3,40 @@ from ngrok import ngrok
 from setup import update_swml_script
 from dotenv import load_dotenv
 import os
-
-from routes.main import main_bp, set_public_url
-from routes import swaig
+from routes import swaig, register_app_blueprints
+import logging
+import base64
+logger = logging.getLogger(__name__)
 
 def create_app():
-    load_dotenv()
     app = Flask(__name__)
+    app.secret_key = os.urandom(24)  # Generate a new secret key on each start
 
-    # Initialize SWAIG and set the proxy
+    # Initialize SWAIG
     swaig.init_app(app)
-
     # Register blueprints
-    app.register_blueprint(main_bp)
+    register_app_blueprints(app)
 
-    # Import route modules to register SWAIG endpoints. Needs to be done after the app is created.
-    import routes.verify_customer as _
-    import routes.send_user_info as _ 
 
     return app
 
+def setup_app_config(app, **kwargs):
+    app.config['PUBLIC_URL'] = kwargs.get('public_url')
+    app.config['C2C_TOKEN'] = os.getenv('C2C_TOKEN')
+    app.config['SIGNALWIRE_AUTH'] = (
+        "Basic " +
+        base64.b64encode(
+            f"{os.getenv('SIGNALWIRE_PROJECT')}:{os.getenv('SIGNALWIRE_TOKEN')}".encode()
+        ).decode()
+    )
+
 if __name__ == '__main__':
+    load_dotenv()
     app = create_app()
     port = 5000
     listener = ngrok.forward(f"localhost:{port}", authtoken_from_env=True)
     public_url = listener.url()
-    print(f"ngrok tunnel running at: {public_url}")
-    set_public_url(public_url)
-    update_swml_script(public_url)
+    logger.info(f"ngrok tunnel running at: {public_url}")
+    setup_app_config(app, public_url=public_url)
+    update_swml_script(public_url, app.config['SIGNALWIRE_AUTH'])
     app.run(debug=False, port=port)

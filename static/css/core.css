@@ -1,0 +1,61 @@
+:root {
+  --sw-pink: #f72a72;
+  --sw-blue: #044ef4;
+  --sw-dark: #070c2d;
+  --sw-gradient: linear-gradient(to right, var(--sw-pink), var(--sw-blue));
+}
+
+body {
+  background-color: var(--sw-dark);
+  background-image: linear-gradient(to bottom, rgba(40, 0, 0, 0.4), transparent),
+                    url('https://raw.githubusercontent.com/signalwire/docs/refs/heads/main/static/img/stardust.png');
+  background-repeat: no-repeat, repeat;
+  background-size: 100% 100%, 300px 300px;
+  color: white;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.sw-glass {
+  background-color: rgba(12, 19, 57, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.sw-gradient-text {
+  background: var(--sw-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.demo-button {
+  background: var(--sw-gradient);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  border-radius: 50px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(247, 42, 114, 0.3);
+  transition: all 0.3s ease;
+}
+.demo-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 42, 114, 0.4);
+}
+
+.sw-logo {
+  display: inline-block;
+  background: url('https://raw.githubusercontent.com/signalwire/docs/10096406ad91fad1c54457ee9c0cd773508eb6d6/static/img/logo-dark.svg') no-repeat center center;
+  background-size: contain;
+  width: 120px;
+  height: 40px;
+  vertical-align: middle;
+}
+.sw-logo--sm { width: 80px; height: 28px; }
+.sw-logo--lg { width: 200px; height: 60px; }
+
+.hidden {
+  display: none;
+} 

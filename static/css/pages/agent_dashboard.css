@@ -1,0 +1,107 @@
+.agent-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+}
+.status-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5em;
+}
+.status-offline { background: #888; }
+.status-connecting { background: #ffc107; }
+.status-online { background: #28a745; }
+.status-in-call { background: #f72a72; }
+.dashboard-card {
+  background: rgba(12, 19, 57, 0.85);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 2em 2em 1.5em 2em;
+  margin-bottom: 2em;
+}
+.main-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5em;
+}
+.call-controls {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  margin-top: 1em;
+}
+.agent-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--sw-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-right: 1em;
+}
+.topbar {
+  background: rgba(12, 19, 57, 0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0.7em 0;
+  margin-bottom: 2em;
+}
+.topbar .sw-logo {
+  margin-right: 1.5em;
+}
+.topbar-actions a {
+  color: #fff;
+  margin-left: 1.2em;
+  text-decoration: none;
+  font-weight: 500;
+}
+.topbar-actions a:hover {
+  color: var(--sw-pink);
+}
+
+.agent-email {
+  color: #e0e6f0;
+  font-size: 0.98em;
+  letter-spacing: 0.01em;
+}
+
+/* Modal styles moved from subscriber.html */
+.modal-header, .modal-footer {
+  background: rgba(12,19,57,0.95) !important;
+}
+.modal-body {
+  background: rgba(12,19,57,0.85) !important;
+}
+.modal-content {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+
+/* Ensure all modal text wraps and does not overflow, regardless of element */
+#incomingCallModal .modal-body, 
+#incomingCallModal .modal-body * {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Center icons on modal accept/reject buttons */
+#incomingCallModal .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+}
+#incomingCallModal .btn i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+} 
