@@ -313,4 +313,10 @@ if (goOfflineBtn) goOfflineBtn.onclick = async () => {
 window.addEventListener('beforeunload', function () {
   if (DashboardState.call && typeof DashboardState.call.hangup === 'function') { try { DashboardState.call.hangup(); } catch (err) {} }
   if (DashboardState.client && typeof DashboardState.client.disconnect === 'function') { try { DashboardState.client.disconnect(); } catch (err) {} }
+  // Notify backend that subscriber is going offline
+  const email = DashboardState.subscriberInfo && DashboardState.subscriberInfo.email;
+  const subscriberId = DashboardState.subscriberInfo && DashboardState.subscriberInfo.id;
+  if (subscriberId) {
+    navigator.sendBeacon(`/api/subscriber_offline/${subscriberId}`);
+  }
 }); 

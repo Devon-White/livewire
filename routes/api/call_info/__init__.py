@@ -8,10 +8,10 @@ logger = logging.getLogger(__name__)
 @api_bp.route('/api/call_info/<call_id>', methods=['GET'])
 def call_info(call_id):
     if request.method == 'GET':
-        logger.info(get_call_info_store())
+        # logger.info(get_call_info_store())  # Remove this log
         info = get_call_info_store().get(call_id)
-        if info:
-            return jsonify(info), 200
+        if info and 'info' in info:
+            return jsonify(info['info']), 200
         else:
             return jsonify({'error': 'Call info not found'}), 404
     else:

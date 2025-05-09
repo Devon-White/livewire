@@ -7,6 +7,8 @@ import logging
 import base64
 from stores.user_store import get_user_store
 from utils.auth_decorators import require_sw_credentials
+from stores.active_subscribers_store import set_active_subscriber
+from utils.swml_utils import fetch_subscriber_address
 
 @html_bp.route('/login', methods=['GET', 'POST'])
 @require_sw_credentials(redirect_if_missing='html.index')
@@ -37,6 +39,10 @@ def login():
                 if not resp.ok:
                     error = 'Subscriber no longer exists. Please contact support.'
                 else:
+                    # Fetch and store address in active_subscribers store
+                    address = fetch_subscriber_address(subscriber_id, project_id, auth_token, space_name)
+                    if address:
+                        set_active_subscriber(subscriber_id, address, session)
                     session['user_email'] = email
                     session['subscriber_ok'] = True
                     return redirect(url_for('html.subscriber_page'))

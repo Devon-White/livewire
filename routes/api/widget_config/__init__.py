@@ -35,7 +35,6 @@ def get_widget_config():
     try:
         addr_resp = requests.get(addresses_url, headers=headers)
         logger.info(f"Addresses response status: {addr_resp.status_code}")
-        logger.info(f"Addresses response text: {addr_resp.text}")
         if not addr_resp.ok:
             logger.error(f"Failed to fetch addresses: {addr_resp.text}")
             return jsonify({'error': 'Failed to fetch handler addresses', 'details': addr_resp.text}), 500
@@ -64,7 +63,6 @@ def get_widget_config():
     try:
         resp = requests.post(guest_token_url, headers=headers, json=payload)
         logger.info(f"SignalWire guest token response status: {resp.status_code}")
-        logger.info(f"SignalWire guest token response text: {resp.text}")
         if not resp.ok:
             logger.error(f"Failed to get guest token: {resp.text}")
             return jsonify({"error": "Failed to get guest token", "details": resp.text}), 500

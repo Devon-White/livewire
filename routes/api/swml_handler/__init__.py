@@ -69,4 +69,12 @@ def swml_handler():
             session['swml_destination'] = destination
         return jsonify({'id': swml_id, 'created': True, 'destination': destination}), 201
     else:
-        return jsonify({'error': 'Failed to create SWML handler', 'details': resp.text}), 500 
+        # Clear session credentials on failure
+        session.pop('sw_project_id', None)
+        session.pop('sw_auth_token', None)
+        session.pop('sw_space_name', None)
+        session.pop('sw_credentials_ok', None)
+        session.pop('swml_id', None)
+        session.pop('swml_destination', None)
+        # Return the actual status code from the API
+        return jsonify({'error': 'Failed to create SWML handler', 'details': resp.text}), resp.status_code 

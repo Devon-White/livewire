@@ -7,7 +7,7 @@
         - play:
             url: "say: Sending the user info to the client. The name collected is {first_name} {last_name}"
         - connect:
-            to: "{subscriber_address}"
+            parallel: {parallel_block}
             status_url: "{status_callback_url}"
             call_state_events: ['ended']
 - stop: true

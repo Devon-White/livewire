@@ -1,0 +1,14 @@
+- toggle_functions:
+    - active: false
+      function:
+        - verify_customer_id
+        - create_member
+    - active: true
+      function: send_user_info
+- SWML:
+    sections:
+      main:
+        - user_event:
+            event:
+              type: "create_member"
+            

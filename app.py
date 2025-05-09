@@ -1,11 +1,10 @@
 from flask import Flask
 from ngrok import ngrok
-from setup import update_swml_script
 from dotenv import load_dotenv
 import os
 from routes import swaig, register_app_blueprints
 import logging
-import base64
+
 logger = logging.getLogger(__name__)
 
 def create_app():

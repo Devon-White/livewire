@@ -66,6 +66,27 @@ This project is a modular Flask application that serves as a backend for a Signa
 - Added a themed spinner to the subscribers dashboard when connecting to the client (goOnlineBtn click). Spinner is shown next to the button and hidden on completion/failure.
 - Added a themed spinner to the index page (SignalWire credentials form) during async submission, matching the login form's UX.
 
+### 2024-06-12: Fix for Bootstrap Modal Error in call.js
+- Added Bootstrap JS CDN include to call.html to ensure `bootstrap` global is available for modal handling in call.js.
+- Fixes ReferenceError: bootstrap is not defined when showing the Create Member modal from the call widget.
+
+### 2024-06-12: create_member API logic
+- The /api/create_member endpoint now:
+  - Extracts form values from the POST request.
+  - Retrieves the current call_id from the form, session, or call_info_store.
+  - Assigns a unique member_id to each new member and stores them in a global customer_store.
+  - Formats a prompt listing all form values as key-value pairs.
+  - Injects the prompt to the agent using the SignalWire REST API (calling.ai_message).
+  - Unholds the agent using the SignalWire REST API (calling.ai_unhold).
+  - Handles errors and returns appropriate status codes.
+- This enables the AI to receive the user's form input and resume the call flow.
+- The customer_store is used for member verification in the verify_customer_id SWAIG function, so new members can be verified on future calls.
+
+### 2024-06-13: Track Online Subscribers & Address Abstraction
+- When a subscriber logs in, their SignalWire address is fetched and stored in a new `active_subscribers` store.
+- Address-fetching logic is now abstracted into a utility for DRYness and maintainability.
+- This enables tracking which subscribers are online and their addresses for future support transfer features.
+
 ## Multi-Layer Session-Based Authentication
 
 The app now enforces a two-step authentication flow using session-based decorators:

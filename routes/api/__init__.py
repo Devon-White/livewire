@@ -8,4 +8,6 @@ from .call_status import *
 from .create_sat import *
 from .widget_config import *
 from .swml_handler import *
+from .create_member import *
+from .subscriber_offline import *
 

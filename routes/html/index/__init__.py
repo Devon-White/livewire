@@ -12,7 +12,7 @@ def index():
         return redirect(url_for('html.call_page'))
 
     if request.method == 'POST':
-        logger.info(f"[INDEX] Form data: {request.form}")
+        # logger.info(f"[INDEX] Form data: {request.form}")  # Remove this log
         # Only process Stage 1 fields
         session['sw_project_id'] = request.form['project_id']
         session['sw_auth_token'] = request.form['auth_token']
