@@ -89,7 +89,10 @@
         </div>
       </div>
     </div>
-    <!-- Remove inline <script> and add external JS include -->
-    <script src="/static/js/subscribers.js" type="module"></script>
+    <!-- Direct import of the module -->
+    <script type="module">
+      import { initDashboard } from '/static/js/modules/subscribers/index.js';
+      // The module will auto-initialize via its DOMContentLoaded listener
+    </script>
 </body>
 </html> 

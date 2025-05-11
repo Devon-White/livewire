@@ -38,6 +38,9 @@
             </div>
         </div>
     </div>
-    <script type="module" src="/static/js/index.js"></script>
+    <script type="module">
+      import { initIndexPage } from '/static/js/modules/index/index.js';
+      // The module will auto-initialize via its DOMContentLoaded listener
+    </script>
 </body>
 </html> 

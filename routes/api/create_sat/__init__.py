@@ -1,37 +1,66 @@
+"""
+Create Subscriber Auth Token API endpoint.
+Creates a SignalWire Subscriber Authentication Token for agent login.
+"""
 from .. import api_bp
-from flask import session, jsonify, current_app
-from stores.user_store import get_user_store
-import requests
+from flask import request
+from stores.user_store import get_user
 import logging
+from utils.session_utils import get_session_vars, USER_EMAIL, get_rest_client, get_subscriber_login_status
+from utils.api_utils import api_error, api_success, validate_json_request
+from utils.signalwire_client import SignalWireAPIError
 
 logger = logging.getLogger(__name__)
 
 @api_bp.route('/api/create_sat', methods=['POST'])
+@validate_json_request()
 def create_sat():
-    email = session.get('user_email')
-    logger.warning(f"create_sat called by user_email={email}")
-    if not email or email not in get_user_store():
-        logger.error("User not authenticated or not in user_store")
-        return jsonify({'error': 'Not authenticated'}), 401
-    project_id = session.get('sw_project_id')
-    auth_token = session.get('sw_auth_token')
-    space_name = session.get('sw_space_name')
-    if not (project_id and auth_token and space_name):
-        return jsonify({'error': 'SignalWire credentials missing from session. Please provide your credentials on the homepage.'}), 400
-    api_url = f"https://{space_name}.signalwire.com/api/fabric/subscribers/tokens"
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': f'Basic {requests.auth._basic_auth_str(project_id, auth_token).split(" ")[1]}'
-    }
-    payload = {"reference": email}
+    """Create a subscriber authentication token (SAT)"""
+    # Get session variables
+    session_vars = get_session_vars()
+    email = session_vars.get('user_email')
+    subscriber_ok = get_subscriber_login_status()
+    
+    # Log relevant session data
+    logger.info(f"create_sat called with email={email}, subscriber_ok={subscriber_ok}")
+    
+    # Verify user is authenticated
+    if not email:
+        logger.error("No user_email in session")
+        return api_error('Not authenticated - No email in session', 401)
+    
+    # Check user exists in user_store
+    user = get_user(email)
+    if not user:
+        logger.error(f"User {email} not found in user_store")
+        # Reset session flag using the utility function
+        return api_error('Not authenticated - Email not in user store', 401)
+    
+    # Check SUBSCRIBER_OK flag
+    if not subscriber_ok:
+        logger.error(f"SUBSCRIBER_OK flag not set for {email}")
+        return api_error('Not authenticated - Not logged in as subscriber', 401)
+    
+    # Get client from session
+    client = get_rest_client()
+    if not client:
+        return api_error('SignalWire client not initialized', 400)
+    
+    # Create SAT token
     try:
-        resp = requests.post(api_url, headers=headers, json=payload)
-        logger.warning(f"SignalWire response: {resp.status_code} {resp.text}")
-        if not resp.ok:
-            return jsonify({'error': 'Failed to create token', 'details': resp.text}), 500
-        data = resp.json()
-        return jsonify({'token': data.get('token')})
-    except Exception as e:
-        logger.exception("Exception in create_sat")
-        return jsonify({'error': str(e)}), 500 
+        token = client.create_subscriber_token(email)
+        if not token:
+            logger.error("Failed to create subscriber token")
+            return api_error('Failed to create subscriber token', 500)
+        
+        logger.info(f"Created subscriber token for {email}")
+        return api_success({'token': token})
+        
+    except SignalWireAPIError as e:
+        logger.exception(f"SignalWire API error: {e.message}")
+        return api_error(
+            'SignalWire API error', 
+            500, 
+            log_level='error', 
+            details={'message': e.message, 'status_code': e.status_code}
+        ) 

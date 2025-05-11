@@ -1,80 +1,94 @@
-from flask import session, jsonify, request, current_app
-import requests
-import base64
+"""
+SWML Handler API endpoint.
+Creates or updates the SignalWire SWML handler.
+"""
+from flask import current_app, request
 from routes.api import api_bp
 import logging
+from utils.session_utils import get_session_vars, set_swml_handler_info
+from utils.api_utils import api_error, api_success, validate_json_request
+from utils.signalwire_client import SignalWireClient, SignalWireAPIError
 
 logger = logging.getLogger(__name__)
 
+def create_or_update_handler(project_id, auth_token, space_name, public_url, swml_id=None):
+    """
+    Create or update a SWML handler using the SignalWireClient.
+    
+    Args:
+        project_id: SignalWire project ID
+        auth_token: SignalWire auth token
+        space_name: SignalWire space name
+        public_url: Public URL for the handler
+        swml_id: Optional existing handler ID
+        
+    Returns:
+        tuple: (handler_id, destination, created_flag) or (None, None, None) on error
+    """
+    client = SignalWireClient(project_id, auth_token, space_name)
+    request_url = f"{public_url.rstrip('/')}/api/swml"
+    
+    try:
+        # Try to update first if we have an ID
+        if swml_id:
+            try:
+                client.update_swml_handler(swml_id, "LiveWire", request_url)
+                addresses = client.get_handler_addresses(swml_id)
+                destination = client.extract_audio_destination(addresses)
+                return swml_id, destination, False  # Updated
+            except SignalWireAPIError as e:
+                logger.warning(f"Failed to update SWML handler {swml_id}, will try to create new. Details: {e.message}")
+                # Fall through to create
+        
+        # Create new handler
+        response = client.create_swml_handler("LiveWire", request_url)
+        new_swml_id = response.get('id')
+        addresses = client.get_handler_addresses(new_swml_id)
+        destination = client.extract_audio_destination(addresses)
+        return new_swml_id, destination, True  # Created
+        
+    except SignalWireAPIError as e:
+        logger.error(f"SignalWire API error: {e.message}")
+        return None, None, None
+
 @api_bp.route('/api/swml_handler', methods=['POST', 'PATCH'])
+@validate_json_request()
 def swml_handler():
-    # Gather credentials from session
-    project_id = session.get('sw_project_id')
-    auth_token = session.get('sw_auth_token')
-    space_name = session.get('sw_space_name')
+    """Create or update the SWML handler"""
+    # Get session variables and app config
+    session_vars = get_session_vars()
+    project_id = session_vars.get('project_id')
+    auth_token = session_vars.get('auth_token')
+    space_name = session_vars.get('space_name')
+    swml_id = session_vars.get('swml_id')
     public_url = current_app.config.get('PUBLIC_URL')
+    
+    # Validate required data
     if not (project_id and auth_token and space_name and public_url):
-        return jsonify({'error': 'Missing credentials or public URL in session.'}), 400
-    api_base = f"https://{space_name}.signalwire.com/api/fabric/resources/external_swml_handlers"
-    auth = base64.b64encode(f"{project_id}:{auth_token}".encode()).decode()
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': f'Basic {auth}'
-    }
-    payload = {
-        "name": "LiveWire",
-        "primary_request_url": f"{public_url.rstrip('/')}/api/swml"
-    }
-    swml_id = session.get('swml_id')
-
-    def fetch_destination(swml_id):
-        addresses_url = f"{api_base}/{swml_id}/addresses"
-        resp = requests.get(addresses_url, headers=headers)
-        if not resp.ok:
-            logger.warning(f"Failed to fetch addresses for handler {swml_id}: {resp.text}")
-            return None
-        data = resp.json().get('data', [])
-        if not data:
-            logger.warning(f"No addresses found for handler {swml_id}")
-            return None
-        channels = data[0].get('channels') or data[0].get('channel')
-        if not channels or 'audio' not in channels:
-            logger.warning(f"No audio channel found in addresses for handler {swml_id}")
-            return None
-        audio_path = channels['audio']
-        destination = audio_path.split('?')[0]
-        return destination
-
-    # Always try to update first if we have an ID
-    if swml_id:
-        url = f"{api_base}/{swml_id}"
-        resp = requests.patch(url, headers=headers, json=payload)
-        if resp.ok:
-            destination = fetch_destination(swml_id)
-            if destination:
-                session['swml_destination'] = destination
-            return jsonify({'id': swml_id, 'updated': True, 'destination': destination}), 200
-        else:
-            logger.warning(f"Failed to update SWML handler {swml_id}, will try to create new. Details: {resp.text}")
-            # If PATCH fails, fall through to create new
-
-    # If no ID or update failed, create new handler
-    resp = requests.post(api_base, headers=headers, json=payload)
-    if resp.ok:
-        swml_id = resp.json().get('id')
-        session['swml_id'] = swml_id
-        destination = fetch_destination(swml_id)
-        if destination:
-            session['swml_destination'] = destination
-        return jsonify({'id': swml_id, 'created': True, 'destination': destination}), 201
-    else:
-        # Clear session credentials on failure
-        session.pop('sw_project_id', None)
-        session.pop('sw_auth_token', None)
-        session.pop('sw_space_name', None)
-        session.pop('sw_credentials_ok', None)
-        session.pop('swml_id', None)
-        session.pop('swml_destination', None)
-        # Return the actual status code from the API
-        return jsonify({'error': 'Failed to create SWML handler', 'details': resp.text}), resp.status_code 
+        missing = []
+        if not project_id: missing.append('project_id')
+        if not auth_token: missing.append('auth_token')
+        if not space_name: missing.append('space_name')
+        if not public_url: missing.append('public_url')
+        return api_error(f'Missing credentials or public URL: {", ".join(missing)}', 400)
+    
+    # Create or update handler
+    handler_id, destination, created = create_or_update_handler(
+        project_id, auth_token, space_name, public_url, swml_id
+    )
+    
+    if not handler_id:
+        # Don't clear session variables, just log the error
+        logger.error(f"Failed to create/update SWML handler - project_id: {project_id}, space_name: {space_name}")
+        return api_error('Failed to create or update SWML handler', 500)
+    
+    # Store handler ID and destination in session using the utility function
+    set_swml_handler_info(handler_id, destination)
+    
+    # Return successful response
+    return api_success({
+        'id': handler_id, 
+        'created': created, 
+        'updated': not created, 
+        'destination': destination
+    }, status_code=201 if created else 200) 

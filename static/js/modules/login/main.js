@@ -1,19 +1,31 @@
-import { showSpinner, hideSpinner } from './utils.js';
+/**
+ * login/main.js
+ * 
+ * Main implementation for the login page.
+ * Handles form submission and error handling.
+ */
 
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
+import { showSpinner, hideSpinner } from '../../utils.js';
+
+// Handle login form submission
+export async function handleLoginSubmission(e) {
   e.preventDefault();
   const form = e.target;
   const loginBtn = document.getElementById('loginBtn');
   const loading = document.getElementById('loginLoading');
+  
   loginBtn.disabled = true;
   showSpinner(loading);
+  
   const data = new FormData(form);
   let errorMsg = null;
+  
   try {
     const resp = await fetch('/login', {
       method: 'POST',
       body: data
     });
+    
     if (resp.redirected) {
       window.location.href = resp.url;
       return;
@@ -33,8 +45,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   } catch (err) {
     errorMsg = 'Network error. Please try again.';
   }
+  
   loginBtn.disabled = false;
   hideSpinner(loading);
+  
   if (errorMsg) {
     let alert = document.querySelector('.alert-danger');
     if (!alert) {
@@ -44,4 +58,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     }
     alert.textContent = errorMsg;
   }
-}); 
+}
+
+// Set up event listeners
+export function initLoginPage() {
+  const form = document.getElementById('loginForm');
+  if (form) {
+    form.addEventListener('submit', handleLoginSubmission);
+  }
+}
+
+// Initialize when the DOM is ready
+document.addEventListener('DOMContentLoaded', initLoginPage); 

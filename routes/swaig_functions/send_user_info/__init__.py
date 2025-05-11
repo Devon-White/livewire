@@ -1,15 +1,20 @@
+"""
+Send User Info SWAIG function.
+Transfers the call to available subscriber agents with user information.
+"""
 import os
 from routes import swaig
 from signalwire_swaig import SWAIGArgument, SWAIGFunctionProperties
 from utils.swml_utils import load_swml_with_vars
-from flask import current_app, session
+from flask import current_app
 import logging
-from stores.call_info_store import get_call_info_store, set_call_info
+from stores.call_info_store import get_call_context, set_call_info
 from stores.active_subscribers_store import get_active_subscribers_by_project
 import yaml
 
 logger = logging.getLogger(__name__)
 
+# Load YAML template for response
 send_user_info_yaml = os.path.join(os.path.dirname(__file__), "send_user_info.yaml")
 
 @swaig.endpoint(
@@ -19,39 +24,57 @@ send_user_info_yaml = os.path.join(os.path.dirname(__file__), "send_user_info.ya
         fillers={
             "default": [
                 "Thank you ${args.first_name} ${args.last_name}, I am transferring you to the next available agent.",
-
             ]
         }
-        ),
+    ),
     first_name=SWAIGArgument(type="string", required=True, description="The user's first name"),
     last_name=SWAIGArgument(type="string", required=True, description="The user's last name"),
     summary=SWAIGArgument(type="string", required=True, description="The user's summary"),
 )
 def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
-
+    """
+    Transfer the call to available subscriber agents with user information.
+    
+    Args:
+        first_name: User's first name
+        last_name: User's last name
+        summary: Call summary/issue description
+        **kwargs: Additional arguments from SWAIG
+        
+    Returns:
+        tuple: (result_text, swml_response)
+    """
+    # Extract call information from request metadata
     call_id = kwargs.get('meta_data', {}).get('call_id')
+    logger.info(f"Sending user info for call {call_id}: {first_name} {last_name}")
+    
+    # Set up callback URL for status updates
     status_callback_url = f"{current_app.config['PUBLIC_URL']}/api/call_status"
-    logger.info(f"Sending user info: {first_name} {last_name} {summary} {call_id}")
-
-    call_info = get_call_info_store().get(call_id, {})
-    context = call_info.get('context', {})
+    
+    # Get project ID from call context
+    context = get_call_context(call_id) if call_id else {}
     project_id = context.get('project_id')
-
-    try:
-        if not project_id:
-            raise ValueError('project_id must be present in call context')
-        logger.info(f"Looking for active subscribers in project: {project_id}")
-        active_subs = get_active_subscribers_by_project(project_id)
-        logger.info(f"Found {len(active_subs)} active subscribers.")
-        addresses = [v['address'] for v in active_subs.values() if v.get('address')]
-        logger.info(f"Active subscriber addresses for transfer: {len(addresses)} addresses.")
-    except Exception as e:
-        logger.error(f"Error fetching active subscribers: {e}")
-        addresses = []
-
-    # Build the parallel block as a YAML-formatted string
+    
+    # Find active subscribers for transfer
+    addresses = []
+    if project_id:
+        try:
+            logger.info(f"Looking for active subscribers in project: {project_id}")
+            active_subs = get_active_subscribers_by_project(project_id)
+            logger.info(f"Found {len(active_subs)} active subscribers")
+            
+            # Extract addresses from active subscribers
+            addresses = [v['address'] for v in active_subs.values() if v.get('address')]
+            logger.info(f"Found {len(addresses)} subscriber addresses for transfer")
+        except Exception as e:
+            logger.exception(f"Error fetching active subscribers: {e}")
+    else:
+        logger.warning("No project_id found in call context, cannot find subscribers for transfer")
+    
+    # Build parallel transfer block for SWML
     parallel_block = yaml.dump([{'to': addr} for addr in addresses], default_flow_style=True).strip()
-
+    
+    # Load and populate SWML template
     swml = load_swml_with_vars(
         swml_file=send_user_info_yaml,
         first_name=first_name,
@@ -59,24 +82,18 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
         status_callback_url=status_callback_url,
         parallel_block=parallel_block
     )
-
-    logger.info(f"SWML loaded for call_id {call_id}.")
-
-    try:
-        logger.info('Final SWML for transfer (not shown for brevity)')
-    except Exception as e:
-        logger.error('Error dumping SWML for transfer: %s', e)
-
+    
+    # Store call information for reference by subscriber dashboard
     if call_id:
         set_call_info(call_id, {
             'first_name': first_name,
             'last_name': last_name,
             'summary': summary
         })
-        logger.info(f"Stored call info for call_id {call_id}.")
+        logger.info(f"Stored call info for call_id {call_id}")
     else:
         logger.warning("No call_id found to store call info!")
-    result = f"Sending form to the user now"
-    logger.info(result)
-    logger.info(f"SWML after load_swml_with_vars: {swml}")
+    
+    # Return response and SWML
+    result = f"Transferring to available agents"
     return result, swml 
