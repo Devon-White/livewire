@@ -8,7 +8,8 @@ import logging
 from flask import request
 
 from livewire.stores.call_info_store import get_call_info, get_call_info_store
-from livewire.utils.api_utils import api_error, api_success, validate_json_request
+from livewire.utils.api_utils import (api_error, api_success,
+                                      validate_json_request)
 
 from .. import api_bp
 

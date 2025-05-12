@@ -106,16 +106,20 @@ def index() -> str:
                         logger.info(f"Loaded SWML ID from file: {swml_id}")
             except Exception as e:
                 logger.warning(f"Failed to load SWML ID from file: {e}")
-        
+
         # If no swml_id, create a new handler
         if not swml_id:
             try:
                 public_url = os.environ.get("PUBLIC_URL")
-                if not public_url and hasattr(client, 'app') and hasattr(client.app, 'config'):
+                if (
+                    not public_url
+                    and hasattr(client, "app")
+                    and hasattr(client.app, "config")
+                ):
                     public_url = client.app.config.get("PUBLIC_URL")
                 if not public_url:
                     # Fallback: try to guess from request
-                    public_url = request.host_url.rstrip('/')
+                    public_url = request.host_url.rstrip("/")
                 handler_name = "LiveWire"
                 request_url = f"{public_url}/api/swml"
                 handler = client.create_swml_handler(handler_name, request_url)
@@ -141,7 +145,9 @@ def index() -> str:
             return redirect(url_for("html.call_page"))
         else:
             logger.error("Failed to set credentials or SWML handler in session")
-            flash("Failed to save credentials or create SWML handler. Please try again.")
+            flash(
+                "Failed to save credentials or create SWML handler. Please try again."
+            )
             return render_template("pages/index.html.jinja")
 
     # For debugging

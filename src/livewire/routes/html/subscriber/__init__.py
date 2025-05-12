@@ -64,7 +64,10 @@ def subscriber_page() -> str:
 
         # Render the template with user info
         return render_template(
-            "pages/subscriber.html.jinja", display_name=display_name, email=email, user=user
+            "pages/subscriber.html.jinja",
+            display_name=display_name,
+            email=email,
+            user=user,
         )
 
     except Exception as e:

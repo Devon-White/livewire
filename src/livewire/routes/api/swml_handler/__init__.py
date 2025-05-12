@@ -70,7 +70,7 @@ def create_or_update_handler(
 @api_bp.route("/api/swml_handler", methods=["POST", "PATCH"])
 @validate_json_request(
     required_fields=[],  # No required fields in the request
-    field_types={}       # No field type validation needed
+    field_types={},  # No field type validation needed
 )
 def swml_handler() -> tuple:
     """

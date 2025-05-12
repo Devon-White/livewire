@@ -9,7 +9,8 @@ from flask import request
 
 from livewire.routes.api import api_bp
 from livewire.stores.active_subscribers_store import set_inactive_subscriber
-from livewire.utils.api_utils import api_error, api_success, validate_json_request
+from livewire.utils.api_utils import (api_error, api_success,
+                                      validate_json_request)
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 @api_bp.route("/api/subscriber_offline/<subscriber_id>", methods=["POST"])
 @validate_json_request(
     required_fields=[],  # No specific fields required
-    field_types={}       # No field type validation needed
+    field_types={},  # No field type validation needed
 )
 def subscriber_offline(subscriber_id):
     """

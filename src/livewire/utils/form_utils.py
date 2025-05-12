@@ -30,7 +30,7 @@ def extract_signup_fields(form: Any) -> Dict[str, str]:
         "region",
         "company_name",
     ]
-    
+
     return {
         field: (
             form.get(field, "").strip()

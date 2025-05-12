@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 @api_bp.route("/api/create_sat", methods=["POST"])
 @validate_json_request(
     required_fields=[],  # Authentication handled through session, no fields required
-    field_types={}       # No field type validation needed
+    field_types={},  # No field type validation needed
 )
 def create_sat():
     """Create a subscriber authentication token (SAT)"""

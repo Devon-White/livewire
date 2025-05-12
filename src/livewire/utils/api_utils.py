@@ -7,7 +7,7 @@ import inspect
 import json
 import logging
 from functools import wraps
-from typing import Any, Callable, Dict, Optional, Tuple, List, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from flask import jsonify, request
 
@@ -80,30 +80,34 @@ def api_success(
 def _get_nested_value(data: Dict[str, Any], path: str) -> Tuple[Any, bool]:
     """
     Get a value from a nested dictionary using dot notation.
-    
+
     Args:
         data (Dict[str, Any]): The dictionary to search in
         path (str): The path to the value using dot notation (e.g., "user.address.city")
-        
+
     Returns:
         Tuple[Any, bool]: (value, exists_flag)
     """
     if not path:
         return None, False
-        
-    parts = path.split('.')
+
+    parts = path.split(".")
     current = data
-    
+
     for part in parts:
         if not isinstance(current, dict) or part not in current:
             return None, False
         current = current[part]
-        
+
     return current, True
 
 
 def _validate_field_type(
-    field_name: str, value: Any, expected_type: Any, required: bool = False, custom_error: Optional[str] = None
+    field_name: str,
+    value: Any,
+    expected_type: Any,
+    required: bool = False,
+    custom_error: Optional[str] = None,
 ) -> Tuple[bool, Optional[str]]:
     """
     Validate that a field has the expected type
@@ -125,7 +129,10 @@ def _validate_field_type(
     # For required fields, enforce non-empty
     if required:
         if value is None:
-            return False, custom_error or f"Field '{field_name}' cannot be null or missing"
+            return (
+                False,
+                custom_error or f"Field '{field_name}' cannot be null or missing",
+            )
         if expected_type == str and value == "":
             return False, custom_error or f"Field '{field_name}' cannot be empty"
 
@@ -194,7 +201,11 @@ def validate_json_request(
                 missing = []
                 for field in required_fields:
                     # Handle nested fields
-                    value, exists = _get_nested_value(data, field) if '.' in field else (data.get(field), field in data)
+                    value, exists = (
+                        _get_nested_value(data, field)
+                        if "." in field
+                        else (data.get(field), field in data)
+                    )
                     if not exists:
                         missing.append(field)
 
@@ -209,10 +220,14 @@ def validate_json_request(
             for field, expected_type in field_types.items():
                 is_required = field in required_fields
                 # Handle nested fields
-                if '.' in field:
+                if "." in field:
                     value, exists = _get_nested_value(data, field)
-                    if exists:  # Skip if field doesn't exist (already handled by required_fields)
-                        is_valid, error = _validate_field_type(field, value, expected_type, required=is_required)
+                    if (
+                        exists
+                    ):  # Skip if field doesn't exist (already handled by required_fields)
+                        is_valid, error = _validate_field_type(
+                            field, value, expected_type, required=is_required
+                        )
                         if not is_valid:
                             validation_errors.append(error)
                 else:
@@ -220,19 +235,21 @@ def validate_json_request(
                     if field not in data:
                         continue
                     # Validate type
-                    is_valid, error = _validate_field_type(field, data[field], expected_type, required=is_required)
+                    is_valid, error = _validate_field_type(
+                        field, data[field], expected_type, required=is_required
+                    )
                     if not is_valid:
                         validation_errors.append(error)
 
             # Run custom validators
             for field, validator in custom_validators.items():
                 # Handle nested fields
-                if '.' in field:
+                if "." in field:
                     value, exists = _get_nested_value(data, field)
                     if exists:  # Skip if field doesn't exist
                         is_valid, error = validator(value)
                         if not is_valid:
-                            validation_errors.append(error) 
+                            validation_errors.append(error)
                 else:
                     # Skip if field isn't in the request
                     if field not in data:
@@ -280,7 +297,7 @@ def validate_email(email: str) -> Tuple[bool, Optional[str]]:
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     if not re.match(pattern, email):
         return False, "Invalid email format"
-    
+
     # Valid email
     return True, None
 

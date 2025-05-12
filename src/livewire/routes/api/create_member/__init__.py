@@ -71,22 +71,26 @@ def format_member_data_prompt(member_data, member_id):
 
 @api_bp.route("/api/create_member", methods=["POST"])
 @validate_json_request(
-    required_fields=["first_name", "last_name", "email", "password", "confirm_password"],
+    required_fields=[
+        "first_name",
+        "last_name",
+        "email",
+        "password",
+        "confirm_password",
+    ],
     field_types={
-        "first_name": str, 
-        "last_name": str, 
+        "first_name": str,
+        "last_name": str,
         "email": str,
         "password": str,
         "confirm_password": str,
         "phone": str,  # Optional
-        "display_name": str,  # Optional 
+        "display_name": str,  # Optional
         "job_title": str,  # Optional
         "company_name": str,  # Optional
-        "call_id": str  # Optional, added by JS if available
+        "call_id": str,  # Optional, added by JS if available
     },
-    custom_validators={
-        "email": validate_email
-    }
+    custom_validators={"email": validate_email},
 )
 def create_member():
     try:
@@ -95,18 +99,18 @@ def create_member():
         last_name = request.json["last_name"]
         email = request.json["email"]
         password = request.json["password"]
-        
+
         # Optional fields
         phone = request.json.get("phone", "")
         display_name = request.json.get("display_name", "")
         job_title = request.json.get("job_title", "")
         company_name = request.json.get("company_name", "")
-        
+
         # 2. Get call_id (either from request or session)
         call_id = request.json.get("call_id")
         if not call_id:
             call_id = get_current_call_id_from_sources()
-            
+
         if not call_id:
             return api_error(
                 "No call_id found for create_member operation", log_level="error"
@@ -117,9 +121,9 @@ def create_member():
             "first_name": first_name,
             "last_name": last_name,
             "email": email,
-            "password": password
+            "password": password,
         }
-        
+
         # Add optional fields if present
         if phone:
             form_data["phone"] = phone

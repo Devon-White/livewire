@@ -5,7 +5,7 @@ install:
 
 # For Replit: install dependencies and start the application
 replit-setup:
-	pip install -r requirements.txt
+	pip install -e .
 	python src/livewire/app.py
 
 # Start the application

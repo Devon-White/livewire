@@ -8,3 +8,4 @@ swml_id.txt
 scratchpad.md
 .cursorignore
 build/
+/src/livewire.egg-info/

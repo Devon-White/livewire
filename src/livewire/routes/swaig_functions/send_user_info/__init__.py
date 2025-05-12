@@ -49,7 +49,9 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
     try:
         # Extract call information from request metadata
         call_id = kwargs.get("meta_data", {}).get("call_id")
-        logger.info(f"[send_user_info] Called with first_name={first_name}, last_name={last_name}, summary={summary}, call_id={call_id}")
+        logger.info(
+            f"[send_user_info] Called with first_name={first_name}, last_name={last_name}, summary={summary}, call_id={call_id}"
+        )
         logger.info(f"[send_user_info] Input kwargs: {kwargs}")
 
         # Set up callback URL for status updates
@@ -65,17 +67,29 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
         addresses = []
         if project_id:
             try:
-                logger.info(f"[send_user_info] Looking for active subscribers in project: {project_id}")
+                logger.info(
+                    f"[send_user_info] Looking for active subscribers in project: {project_id}"
+                )
                 active_subs = get_active_subscribers_by_project(project_id)
-                logger.info(f"[send_user_info] Found {len(active_subs)} active subscribers: {active_subs}")
+                logger.info(
+                    f"[send_user_info] Found {len(active_subs)} active subscribers: {active_subs}"
+                )
 
                 # Extract addresses from active subscribers
-                addresses = [v["address"] for v in active_subs.values() if v.get("address")]
-                logger.info(f"[send_user_info] Found {len(addresses)} subscriber addresses for transfer: {addresses}")
+                addresses = [
+                    v["address"] for v in active_subs.values() if v.get("address")
+                ]
+                logger.info(
+                    f"[send_user_info] Found {len(addresses)} subscriber addresses for transfer: {addresses}"
+                )
             except Exception as e:
-                logger.exception(f"[send_user_info] Error fetching active subscribers: {e}")
+                logger.exception(
+                    f"[send_user_info] Error fetching active subscribers: {e}"
+                )
         else:
-            logger.warning("[send_user_info] No project_id found in call context, cannot find subscribers for transfer")
+            logger.warning(
+                "[send_user_info] No project_id found in call context, cannot find subscribers for transfer"
+            )
 
         # Build parallel transfer block for SWML
         try:
@@ -85,7 +99,7 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
             logger.info(f"[send_user_info] Parallel block for SWML: {parallel_block}")
         except Exception as e:
             logger.exception(f"[send_user_info] Error building parallel block: {e}")
-            parallel_block = ''
+            parallel_block = ""
 
         # Load and populate SWML template
         try:
@@ -99,14 +113,18 @@ def send_user_info(first_name: str, last_name: str, summary: str, **kwargs):
             logger.info(f"[send_user_info] Loaded SWML template successfully.")
         except Exception as e:
             logger.exception(f"[send_user_info] Error loading SWML template: {e}")
-            swml = ''
+            swml = ""
 
         # Store call information for reference by subscriber dashboard
         if call_id:
             try:
                 set_call_info(
                     call_id,
-                    {"first_name": first_name, "last_name": last_name, "summary": summary},
+                    {
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "summary": summary,
+                    },
                 )
                 logger.info(f"[send_user_info] Stored call info for call_id {call_id}")
             except Exception as e:

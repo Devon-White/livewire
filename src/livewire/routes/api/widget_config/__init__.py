@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @api_bp.route("/api/widget_config", methods=["POST"])
 @validate_json_request(
     required_fields=[],  # No required fields
-    field_types={},      # No field type validation needed
+    field_types={},  # No field type validation needed
 )
 def get_widget_config() -> tuple:
     """
