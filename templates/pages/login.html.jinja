@@ -16,12 +16,12 @@
     <form id="loginForm" method="post" action="{{ url_for('html.login') }}" autocomplete="off">
       <div class="mb-3">
         <label class="form-label">Email <span class="text-danger">*</span></label>
-        <input type="email" name="email" class="form-control" required value="{{ prefill_email or '' }}">
+        <input type="email" name="email" class="form-control" placeholder="your.email@example.com" required value="{{ prefill_email or '' }}">
         <div class="invalid-feedback">Email is required.</div>
       </div>
       <div class="mb-3">
         <label class="form-label">Password <span class="text-danger">*</span></label>
-        <input type="password" name="password" class="form-control" required>
+        <input type="password" name="password" class="form-control" placeholder="Your password" required>
         <div class="invalid-feedback">Password is required.</div>
       </div>
       <button type="submit" class="demo-button w-100 mt-3">Login</button>

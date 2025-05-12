@@ -21,6 +21,18 @@ input.form-control:focus {
   color: #fff;
 }
 
+/* Make placeholder text more visible */
+::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+::-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
 /* Control width of the account form container */
 .max-w-460 {
   max-width: 460px !important;

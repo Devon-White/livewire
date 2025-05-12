@@ -9,7 +9,7 @@
   <!-- Email field -->
   <div class="mb-4">
     <label for="email" class="form-label d-block mb-2">Email <span class="text-danger">*</span></label>
-    <input type="email" name="email" id="email" class="form-control" required>
+    <input type="email" name="email" id="email" class="form-control" placeholder="your.email@example.com" required>
     <div class="invalid-feedback">Email is required.</div>
   </div>
 
@@ -17,12 +17,12 @@
   <div class="row mb-4">
     <div class="col-md-6">
       <label for="first_name" class="form-label d-block mb-2">First Name <span class="text-danger">*</span></label>
-      <input type="text" name="first_name" id="first_name" class="form-control" required>
+      <input type="text" name="first_name" id="first_name" class="form-control" placeholder="John" required>
       <div class="invalid-feedback">First name is required.</div>
     </div>
     <div class="col-md-6">
       <label for="last_name" class="form-label d-block mb-2">Last Name <span class="text-danger">*</span></label>
-      <input type="text" name="last_name" id="last_name" class="form-control" required>
+      <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Smith" required>
       <div class="invalid-feedback">Last name is required.</div>
     </div>
   </div>
@@ -31,13 +31,13 @@
   <div class="row mb-4">
     <div class="col-md-6">
       <label for="password" class="form-label d-block mb-3">Password <span class="text-danger">*</span></label>
-      <input type="password" name="password" id="password" class="form-control" required minlength="8" autocomplete="new-password">
+      <input type="password" name="password" id="password" class="form-control" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
       <div class="invalid-feedback" id="passwordLengthError">Password must be at least 8 characters.</div>
       <div class="invalid-feedback">Password is required.</div>
     </div>
     <div class="col-md-6">
       <label for="confirm_password" class="form-label d-block mb-3 text-nowrap">Confirm Password <span class="text-danger">*</span></label>
-      <input type="password" name="confirm_password" id="confirm_password" class="form-control" required autocomplete="new-password">
+      <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Re-enter password" required autocomplete="new-password">
       <div class="invalid-feedback" id="passwordMatchError">Passwords do not match.</div>
       <div class="invalid-feedback">Confirm password is required.</div>
     </div>
@@ -50,11 +50,11 @@
   <div class="row mb-4">
     <div class="col-md-6">
       <label for="display_name" class="form-label d-block mb-3">Display Name</label>
-      <input type="text" name="display_name" id="display_name" class="form-control">
+      <input type="text" name="display_name" id="display_name" class="form-control" placeholder="How you'll appear">
     </div>
     <div class="col-md-6">
       <label for="phone" class="form-label d-block mb-3">Phone</label>
-      <input type="tel" name="phone" id="phone" class="form-control">
+      <input type="tel" name="phone" id="phone" class="form-control" placeholder="+12025551234">
       <div class="invalid-feedback">Please enter a valid phone number.</div>
     </div>
   </div>
@@ -63,11 +63,11 @@
   <div class="row mb-4">
     <div class="col-md-6">
       <label for="job_title" class="form-label d-block mb-3">Job Title</label>
-      <input type="text" name="job_title" id="job_title" class="form-control">
+      <input type="text" name="job_title" id="job_title" class="form-control" placeholder="e.g. Software Engineer">
     </div>
     <div class="col-md-6">
       <label for="company_name" class="form-label d-block mb-3">Company Name</label>
-      <input type="text" name="company_name" id="company_name" class="form-control">
+      <input type="text" name="company_name" id="company_name" class="form-control" placeholder="Your organization">
     </div>
   </div>
 </div> 
