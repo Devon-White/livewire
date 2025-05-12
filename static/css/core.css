@@ -112,3 +112,18 @@ body {
   border-width: 0.2em;
   border-right-color: var(--sw-pink) !important;
 }
+
+/* Utility class for call icons */
+.call-icon {
+  font-size: 22px;
+}
+
+/* Utility classes for layout and backgrounds */
+.min-vh-90 { min-height: 90vh !important; }
+.max-w-400 { max-width: 400px !important; }
+.gradient-bg { background: var(--sw-gradient) !important; }
+
+.spinner-lg {
+  width: 2rem !important;
+  height: 2rem !important;
+}

@@ -1,0 +1,43 @@
+{% extends "layouts/base.html.jinja" %}
+
+{% block title %}Make a Call - LiveWire SignalWire Demo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/call.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="sw-gradient-text mb-4">Context aware call transfers with AI!</h1>
+    
+    <!-- Call button -->
+    <div class="call-button-container">
+        <button id="callButton" class="demo-button demo-button-disabled d-flex align-items-center justify-content-center">
+            <span class="call-text d-flex align-items-center">
+                <i class="bi bi-telephone-fill me-2 call-icon"></i>
+                Call Now
+            </span>
+            <span class="call-loading">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="loading-text">Initializing widget...</span>
+            </span>
+        </button>
+    </div>
+</div>
+
+<!-- Hidden member form for modal use -->
+<div id="createMemberFormContainer" class="hidden">
+  {% set form_id = 'createMemberForm' %}
+  {% set button_text = 'Create Member' %}
+  {% set api_endpoint = url_for('api.create_member') %}
+  {% include 'components/forms/member_form_api.html.jinja' %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- SignalWire call widget script -->
+<script src="https://cdn.jsdelivr.net/npm/@niravcodes/call-widget@latest/dist/c2c-widget-full.umd.min.js"></script>
+<script type="module" src="{{ url_for('static', filename='js/modules/call/main.js') }}"></script>
+{% endblock %} 

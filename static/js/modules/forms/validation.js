@@ -5,6 +5,10 @@
  * Provides consistent validation for email, passwords, names, and other form fields.
  */
 
+// Constants
+export const DEFAULT_PASSWORD_MIN_LENGTH = 8;
+export const PHONE_REGEX = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+
 // Validates an email address
 export function validateEmail(email) {
   if (!email || email.trim() === '') {
@@ -20,7 +24,7 @@ export function validateEmail(email) {
 }
 
 // Validates a password
-export function validatePassword(password, minLength = 6) {
+export function validatePassword(password, minLength = DEFAULT_PASSWORD_MIN_LENGTH) {
   if (!password || password.trim() === '') {
     return { valid: false, message: 'Password is required' };
   }
@@ -48,7 +52,7 @@ export function validatePhone(phone) {
   }
   
   // Basic phone validation (accepts country codes, spaces, dashes)
-  const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+  const phoneRegex = PHONE_REGEX;
   if (!phoneRegex.test(phone)) {
     return { valid: false, message: 'Please enter a valid phone number' };
   }

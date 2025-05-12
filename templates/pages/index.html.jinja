@@ -1,0 +1,46 @@
+{% extends "layouts/base.html.jinja" %}
+
+{% block title %}Welcome - LiveWire SignalWire Demo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="sw-glass p-5 rounded shadow-lg">
+                <h1 class="sw-gradient-text mb-4">Welcome to LiveWire SignalWire Demo</h1>
+                <p class="mb-4">Enter your SignalWire credentials to get started. These are stored only for your session.</p>
+                
+                <!-- SignalWire credentials form -->
+                <form id="stage1" autocomplete="off">
+                    <div class="mb-3">
+                        <label class="form-label">SignalWire Project ID</label>
+                        <input type="password" name="project_id" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SignalWire Auth Token</label>
+                        <input type="password" name="auth_token" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SignalWire Space Name</label>
+                        <input type="password" name="space_name" class="form-control" required>
+                    </div>
+                    <button type="submit" class="demo-button w-100 mt-3" id="indexSubmitBtn">Get Started</button>
+                    
+                    <!-- Loading indicator -->
+                    <div id="indexLoading" class="text-center mt-3 hidden">
+                        <span class="spinner-border text-info spinner-lg" role="status"></span>
+                        <span class="d-block mt-2">Connecting...</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+  import { initIndexPage } from "{{ url_for('static', filename='js/modules/index/index.js') }}";
+  // The module will auto-initialize via its DOMContentLoaded listener
+</script>
+{% endblock %} 

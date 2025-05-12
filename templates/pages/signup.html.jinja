@@ -1,0 +1,42 @@
+{% extends "layouts/base.html.jinja" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-90">
+  <div class="sw-glass p-5 rounded shadow-lg max-w-400 w-100">
+    <div id="signupFormStep">
+      <h2 class="mb-4 text-center">Create Account</h2>
+      
+      <!-- Error display -->
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      
+      <!-- Signup form -->
+      {% set form_id = 'signupForm' %}
+      {% set button_text = 'Sign Up' %}
+      {% set form_action = url_for('html.signup') %}
+      {% include 'components/forms/member_form_html.html.jinja' %}
+      
+      <!-- Login link -->
+      <p class="mt-3 text-center">Already have an account? <a href="/login" class="text-info">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Confirmation Modal -->
+{% set modal_id = 'confirmModal' %}
+{% set title = 'Confirm Subscription' %}
+{% set body_content = '<b>Subscribers are $3/month.</b><br>To stop charges, you must delete the subscriber.' %}
+{% set confirm_btn_id = 'confirmSignupBtn' %}
+{% set confirm_btn_text = 'Confirm & Sign Up' %}
+{% include 'components/modals/confirmation_modal.html.jinja' %}
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+  // The signup module is self-initializing and will handle the form
+  import "{{ url_for('static', filename='js/modules/forms/index.js') }}";
+</script>
+{% endblock %} 

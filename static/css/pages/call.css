@@ -1,0 +1,43 @@
+/* call.css - Page-specific styles for the call page (call.html.jinja) */
+.call-button-container {
+    min-height: 48px;
+    display: block;
+    margin-bottom: 20px;
+}
+#callButton:not(.demo-button-disabled) .call-text {
+    display: flex !important;
+}
+#callButton:not(.demo-button-disabled) .call-loading {
+    display: none !important;
+}
+#callButton.demo-button-disabled {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    cursor: default !important;
+    min-width: 0 !important;
+    transform: none !important;
+    border-radius: 0 !important;
+}
+#callButton.demo-button-disabled .call-text {
+    display: none !important;
+}
+#callButton.demo-button-disabled .call-loading {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+#callButton.demo-button-disabled .spinner-border {
+    width: 2rem !important;
+    height: 2rem !important;
+    margin-bottom: 0.5rem !important;
+}
+#callButton.demo-button-disabled .loading-text {
+    font-size: 0.9rem;
+    color: #aaa;
+} 

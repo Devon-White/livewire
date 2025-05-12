@@ -1,0 +1,101 @@
+{% extends "layouts/base.html.jinja" %}
+
+{% block title %}Agent Dashboard{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/subscribers.css') }}">
+<script src="https://cdn.signalwire.com/@signalwire/js"></script>
+{% endblock %}
+
+{% block content %}
+{% set agent_status = True %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Main dashboard card -->
+      <div class="dashboard-card main-controls">
+        <div class="d-flex flex-column align-items-center mb-3">
+          <div id="callStatus" class="mb-2">Waiting for call...</div>
+        </div>
+        <div id="callInfo" class="mb-3"></div>
+        
+        <!-- Call control buttons -->
+        <div class="call-controls">
+          <button id="goOnlineBtn" class="demo-button">Go Online</button>
+          <button id="goOfflineBtn" class="demo-button hidden">Go Offline</button>
+          <button id="hangupCallBtn" class="demo-button hidden">
+            <i class="bi bi-telephone-x-fill icon-md me-2"></i>Hangup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden fields for JavaScript -->
+<input id="host" type="hidden" value="devspace.signalwire.com" />
+<input id="token" type="hidden" value="" readonly />
+
+<!-- Subscriber Info Modal -->
+<div class="modal fade" id="subscriberInfoModal" tabindex="-1" aria-labelledby="subscriberInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white border-0">
+      <div class="modal-header border-0" style="background:rgba(12,19,57,0.95);">
+        <h5 class="modal-title" id="subscriberInfoModalLabel">Subscriber Info</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background:rgba(12,19,57,0.85);">
+        <table class="table table-dark table-borderless mb-0" id="subscriberInfoTable">
+          <tr><th>Email:</th><td data-field="email"></td></tr>
+          <tr><th>First Name:</th><td data-field="first_name"></td></tr>
+          <tr><th>Last Name:</th><td data-field="last_name"></td></tr>
+          <tr><th>Display Name:</th><td data-field="display_name"></td></tr>
+          <tr><th>Job Title:</th><td data-field="job_title"></td></tr>
+          <tr><th>Timezone:</th><td data-field="time_zone"></td></tr>
+          <tr><th>Country:</th><td data-field="country"></td></tr>
+          <tr><th>Region:</th><td data-field="region"></td></tr>
+          <tr><th>Company Name:</th><td data-field="company_name"></td></tr>
+          <tr><th>Subscriber ID:</th><td data-field="id"></td></tr>
+        </table>
+      </div>
+      <div class="modal-footer border-0" style="background:rgba(12,19,57,0.95);">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Incoming Call Modal -->
+<div class="modal fade" id="incomingCallModal" tabindex="-1" aria-labelledby="incomingCallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-0" style="box-shadow: 0 8px 32px rgba(0,0,0,0.35);">
+      <div class="modal-header border-0" style="background:rgba(12,19,57,0.95);">
+        <h5 class="modal-title" id="incomingCallModalLabel">
+          <i class="bi bi-telephone-inbound me-2 icon-lg"></i>
+          Incoming Call
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" style="background:rgba(12,19,57,0.85);">
+        <div id="incomingCallerName" class="fs-4 fw-bold mb-2"></div>
+        <div id="incomingCallerSummary" class="mb-3 text-secondary"></div>
+        <div class="d-flex justify-content-center gap-4 mt-4">
+          <button id="modalAcceptCallBtn" class="btn btn-success btn-lg rounded-circle d-flex align-items-center justify-content-center" style="width:64px;height:64px;">
+            <i class="bi bi-telephone-fill me-2 icon-xl"></i>
+          </button>
+          <button id="modalRejectCallBtn" class="btn btn-danger btn-lg rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-telephone-x-fill icon-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+  import { initDashboard } from "{{ url_for('static', filename='js/modules/subscribers/main.js') }}";
+  // The module will auto-initialize via its DOMContentLoaded listener
+</script>
+{% endblock %} 

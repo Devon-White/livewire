@@ -1,0 +1,27 @@
+<!-- 
+  Confirmation Modal Component 
+  Parameters:
+  - modal_id: ID for the modal (default: confirmModal)
+  - title: Modal title
+  - body_content: HTML content for the modal body
+  - confirm_btn_id: ID for the confirmation button (default: confirmBtn)
+  - confirm_btn_text: Text for the confirmation button (default: Confirm)
+  - cancel_btn_text: Text for the cancel button (default: Cancel)
+-->
+<div class="modal fade" id="{{ modal_id|default('confirmModal') }}" tabindex="-1" aria-labelledby="{{ modal_id|default('confirmModal') }}Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content sw-glass text-white border-0">
+      <div class="modal-header border-0" style="background:rgba(12,19,57,0.95);">
+        <h5 class="modal-title" id="{{ modal_id|default('confirmModal') }}Label">{{ title }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background:rgba(12,19,57,0.85);">
+        {{ body_content|safe }}
+      </div>
+      <div class="modal-footer border-0" style="background:rgba(12,19,57,0.95);">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ cancel_btn_text|default('Cancel') }}</button>
+        <button id="{{ confirm_btn_id|default('confirmBtn') }}" type="button" class="btn btn-primary demo-button">{{ confirm_btn_text|default('Confirm') }}</button>
+      </div>
+    </div>
+  </div>
+</div> 

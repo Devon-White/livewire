@@ -62,3 +62,14 @@
   justify-content: center;
   margin: 0;
 }
+
+/* Utility icon sizing classes for dashboard icons */
+.icon-md { font-size: 1.3em; }
+.icon-lg { font-size: 1.5em; }
+.icon-xl { font-size: 2em; }
+
+/* Modal button sizing for accept/reject */
+#incomingCallModal .btn-lg.rounded-circle {
+  width: 64px;
+  height: 64px;
+}

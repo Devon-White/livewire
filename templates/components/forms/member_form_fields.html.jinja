@@ -1,0 +1,67 @@
+<!-- Member form fields - shared across different form implementations -->
+<!-- Required fields section -->
+<div class="mb-2 text small">Fields marked with <span class="text-danger">*</span> are required.</div>
+
+<!-- Email field (full width) -->
+<div class="row mb-3">
+  <div class="col-12">
+    <label class="form-label">Email <span class="text-danger">*</span></label>
+    <input type="email" name="email" class="form-control" required>
+    <div class="invalid-feedback">Email is required.</div>
+  </div>
+</div>
+
+<!-- First Name and Last Name -->
+<div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">First Name <span class="text-danger">*</span></label>
+    <input type="text" name="first_name" class="form-control" required>
+    <div class="invalid-feedback">First name is required.</div>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Last Name <span class="text-danger">*</span></label>
+    <input type="text" name="last_name" class="form-control" required>
+    <div class="invalid-feedback">Last name is required.</div>
+  </div>
+</div>
+
+<!-- Display Name, Job Title, Company Name -->
+<div class="row mb-3">
+  <div class="col-md-4">
+    <label class="form-label">Display Name</label>
+    <input type="text" name="display_name" class="form-control">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Job Title</label>
+    <input type="text" name="job_title" class="form-control">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Company Name</label>
+    <input type="text" name="company_name" class="form-control">
+  </div>
+</div>
+
+<!-- Phone (full width) -->
+<div class="row mb-3">
+  <div class="col-12">
+    <label class="form-label">Phone</label>
+    <input type="tel" name="phone" class="form-control">
+    <div class="invalid-feedback">Please enter a valid phone number.</div>
+  </div>
+</div>
+
+<!-- Password and Confirm Password -->
+<div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Password <span class="text-danger">*</span></label>
+    <input type="password" name="password" id="password" class="form-control" required minlength="8" autocomplete="new-password">
+    <div class="invalid-feedback" id="passwordLengthError">Password must be at least 8 characters.</div>
+    <div class="invalid-feedback">Password is required.</div>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+    <input type="password" name="confirm_password" id="confirm_password" class="form-control" required autocomplete="new-password">
+    <div class="invalid-feedback" id="passwordMatchError">Passwords do not match.</div>
+    <div class="invalid-feedback">Confirm password is required.</div>
+  </div>
+</div> 

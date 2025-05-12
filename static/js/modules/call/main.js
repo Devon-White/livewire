@@ -19,8 +19,11 @@ let userEventListener = null;
 export function handleUserEvent(params) {
     console.log("User event received:", params);
     if (params.type === "create_member") {
+        // Just show the modal - form will self-initialize
         showCreateMemberModal(currentCallId);
-        initCreateMemberForm();
+        
+        // No need to explicitly call initCreateMemberForm, 
+        // the form's inline script will handle initialization
     }
 }
 

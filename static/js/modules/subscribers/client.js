@@ -9,6 +9,10 @@ import { DashboardState, markListenersAttached, updateSubscriberInfo } from './s
 import { setDashboardStatus, applyCallInfoToUI } from './ui.js';
 import { showSpinner, hideSpinner, fetchAPI } from '../../utils.js';
 
+// Constants
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 1500;
+
 // Initialize the client and attach event listeners
 export async function createClientAndAttachListeners(host, token, handleIncomingCall) {
   try {
@@ -85,8 +89,8 @@ export async function goOnline(host, token, handleIncomingCall, spinner) {
   
   let triedNewToken = false;
   let attempt = 0;
-  const maxAttempts = 3;
-  const retryDelay = 1500;
+  const maxAttempts = MAX_ATTEMPTS;
+  const retryDelay = RETRY_DELAY_MS;
   
   while (attempt < maxAttempts) {
     try {

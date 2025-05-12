@@ -1,0 +1,10 @@
+<!-- 
+  API Form Wrapper Component - Used for JavaScript-based API submissions
+  This form doesn't use standard form submissions, but rather JavaScript to submit as JSON
+-->
+<form id="{{ form_id|default('createMemberForm') }}" 
+      class="api-form" 
+      data-api-endpoint="{{ api_endpoint|default('/api/create_member') }}">
+  {% include 'components/forms/member_form_fields.html.jinja' %}
+  <button type="button" class="demo-button w-100 mt-3 member-submit-btn">{{ button_text|default('Create Member') }}</button>
+</form> 

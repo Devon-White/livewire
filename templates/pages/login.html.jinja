@@ -1,0 +1,41 @@
+{% extends "layouts/base.html.jinja" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-90">
+  <div class="sw-glass p-5 rounded shadow-lg max-w-400 w-100">
+    <h2 class="mb-4 text-center">Subscriber Login</h2>
+    
+    <!-- Error display -->
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    
+    <!-- Login form -->
+    <form id="loginForm" method="post" action="{{ url_for('html.login') }}" autocomplete="off">
+      <div class="mb-3">
+        <label class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" name="email" class="form-control" required value="{{ prefill_email or '' }}">
+        <div class="invalid-feedback">Email is required.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password <span class="text-danger">*</span></label>
+        <input type="password" name="password" class="form-control" required>
+        <div class="invalid-feedback">Password is required.</div>
+      </div>
+      <button type="submit" class="demo-button w-100 mt-3">Login</button>
+    </form>
+    
+    <!-- Signup link -->
+    <p class="mt-3 text-center">Don't have an account? <a href="/signup" class="text-info">Sign Up</a></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+  // The login module will initialize form validation
+  import "{{ url_for('static', filename='js/modules/forms/login.js') }}";
+</script>
+{% endblock %} 

@@ -1,0 +1,11 @@
+<!-- 
+  HTML Form Wrapper Component - Used for traditional server-rendered form submissions
+  This form uses standard HTML form POST submission with page navigation
+-->
+<form id="{{ form_id|default('memberForm') }}" 
+      method="{{ form_method|default('post') }}"
+      action="{{ form_action }}"
+      autocomplete="off">
+  {% include 'components/forms/member_form_fields.html.jinja' %}
+  <button type="submit" class="demo-button w-100 mt-3">{{ button_text|default('Submit') }}</button>
+</form> 

@@ -1,9 +1,11 @@
-/**
+/*
  * call/ui.js
  * 
  * UI-related functions for the call widget page.
  * Handles modals and other UI elements.
  */
+
+import { initCreateMemberForm } from '../forms/create-member.js';
 
 // Create and show the member creation modal
 export function showCreateMemberModal(currentCallId) {
@@ -11,7 +13,10 @@ export function showCreateMemberModal(currentCallId) {
     const existing = document.getElementById('createMemberModal');
     if (existing) existing.remove();
 
-    // Modal HTML (adapted from signup.html)
+    // Get the form HTML from the hidden container
+    const formHtml = document.getElementById('createMemberFormContainer')?.innerHTML || '';
+
+    // Modal HTML (form will be injected)
     const modalHtml = /*html*/`
     <div class="modal fade" id="createMemberModal" tabindex="-1" aria-labelledby="createMemberModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -21,49 +26,7 @@ export function showCreateMemberModal(currentCallId) {
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" style="background:rgba(12,19,57,0.85);">
-            <form id="createMemberForm" autocomplete="off">
-              <input type="hidden" name="call_id" id="createMemberCallId" value="">
-              <div class="mb-2 text small">Fields marked with <span class="text-danger">*</span> are required.</div>
-              <div class="mb-3">
-                <label class="form-label">First Name <span class="text-danger">*</span></label>
-                <input type="text" name="first_name" class="form-control" required>
-                <div class="invalid-feedback">First name is required.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                <input type="text" name="last_name" class="form-control" required>
-                <div class="invalid-feedback">Last name is required.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Summary <span class="text-danger">*</span></label>
-                <textarea name="summary" class="form-control" required 
-                          placeholder="Brief description of why you're calling"></textarea>
-                <div class="invalid-feedback">Summary is required.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Email <span class="text-danger">*</span></label>
-                <input type="email" name="email" class="form-control" required>
-                <div class="invalid-feedback">Email is required.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Phone</label>
-                <input type="tel" name="phone" class="form-control">
-                <div class="invalid-feedback">Please enter a valid phone number.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Display Name</label>
-                <input type="text" name="display_name" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Job Title</label>
-                <input type="text" name="job_title" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Company Name</label>
-                <input type="text" name="company_name" class="form-control">
-              </div>
-              <button type="submit" class="demo-button w-100 mt-3">Create Member</button>
-            </form>
+            ${formHtml}
           </div>
         </div>
       </div>
@@ -71,16 +34,23 @@ export function showCreateMemberModal(currentCallId) {
     
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-    // Set the call_id hidden input value
-    const callIdInput = document.getElementById('createMemberCallId');
-    if (callIdInput && currentCallId) {
-        callIdInput.value = currentCallId;
+    // Store the call_id as a data attribute on the modal
+    const modalElement = document.getElementById('createMemberModal');
+    if (modalElement && currentCallId) {
+        modalElement.dataset.callId = currentCallId;
+        console.log(`Set call_id data attribute to: ${currentCallId}`);
     }
+    
+    // No need to modify the form here, just log it's ready
+    console.log('Member form loaded in modal, ready for initialization');
 
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('createMemberModal'));
     modal.show();
-    
+
+    // Initialize the form handler after modal is in DOM
+    initCreateMemberForm();
+
     return modal;
 }
 
@@ -183,4 +153,12 @@ export function createWidgetHtml(callButtonId, config) {
             token="${config.guest_token}">
         </c2c-widget>
     `;
-} 
+}
+
+// Listen for the custom memberCreated event
+document.addEventListener('memberCreated', function(event) {
+    if (event.detail && event.detail.memberId) {
+        console.log('Received memberCreated event with ID:', event.detail.memberId);
+        showMemberIdModal(event.detail.memberId);
+    }
+}); 
