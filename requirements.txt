@@ -4,6 +4,7 @@ ngrok
 python-dotenv
 signalwire-swaig
 pyyaml
+setuptools
 
 # Dev dependencies
 black
