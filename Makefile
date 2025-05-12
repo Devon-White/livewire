@@ -1,7 +1,7 @@
 .PHONY: install start lint format clean replit-setup dev-install dev docs
 
 install:
-	pip install -r requirements.txt 
+	pip install -e .
 
 # For Replit: install dependencies and start the application
 replit-setup:

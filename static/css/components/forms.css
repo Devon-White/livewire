@@ -7,6 +7,7 @@ input.form-control, select.form-control {
   background: rgba(255,255,255,0.08);
   color: #fff;
   border: 1px solid rgba(255,255,255,0.15);
+  height: 42px; /* Control the height */
 }
 input.form-control:focus {
   background: rgba(255,255,255,0.15);
@@ -18,4 +19,17 @@ input.form-control:focus {
   background: rgba(247, 42, 114, 0.1);
   border: none;
   color: #fff;
+}
+
+/* Control width of the account form container */
+.max-w-460 {
+  max-width: 460px !important;
+  width: 100%;
+}
+
+/* Limit the width of form inputs in two-column layouts */
+@media (min-width: 768px) {
+  .col-md-6 .form-control {
+    max-width: 200px;
+  }
 } 
