@@ -5,11 +5,33 @@
  * Shared classes (e.g., .agent-avatar, .agent-status, .status-dot) are defined here for DRYness.
  */
 :root {
+  /* Primary brand colors */
   --sw-pink: #f72a72;
   --sw-blue: #044ef4;
   --sw-dark: #070c2d;
   --sw-gradient: linear-gradient(to right, var(--sw-pink), var(--sw-blue));
   --sw-gray-bg: #181d2f;
+  
+  /* Extended color palette */
+  --sw-info: #36a3f7;
+  --sw-warning: #ffcc00;
+  --sw-success: #28a745;
+  --sw-danger: var(--sw-pink);
+  
+  /* UI element colors */
+  --sw-text-primary: #ffffff;
+  --sw-text-secondary: rgba(255, 255, 255, 0.9);
+  --sw-text-muted: rgba(255, 255, 255, 0.6);
+  
+  /* Background and border colors */
+  --sw-bg-dark: rgba(0, 0, 0, 0.25);
+  --sw-bg-light: rgba(255, 255, 255, 0.05);
+  --sw-border-light: rgba(255, 255, 255, 0.1);
+  --sw-border-medium: rgba(255, 255, 255, 0.15);
+  
+  /* Shadow colors */
+  --sw-shadow-color: rgba(0, 0, 0, 0.2);
+  --sw-pink-glow: rgba(247, 42, 114, 0.3);
 }
 
 body {
@@ -18,13 +40,13 @@ body {
                     url('https://raw.githubusercontent.com/signalwire/docs/refs/heads/main/static/img/stardust.png');
   background-repeat: no-repeat, repeat;
   background-size: 100% 100%, 300px 300px;
-  color: white;
+  color: var(--sw-text-primary);
   font-family: 'Inter', Arial, sans-serif;
 }
 
 .sw-glass {
   background-color: rgba(12, 19, 57, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--sw-border-light);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -38,13 +60,13 @@ body {
 
 .demo-button {
   background: var(--sw-gradient);
-  color: white;
+  color: var(--sw-text-primary);
   border: none;
   padding: 12px 25px;
   font-size: 16px;
   border-radius: 50px;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(247, 42, 114, 0.3);
+  box-shadow: 0 4px 15px var(--sw-pink-glow);
   transition: all 0.3s ease;
 }
 .demo-button:hover {
@@ -84,7 +106,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--sw-text-primary);
   font-size: 1.5em;
   font-weight: bold;
   margin-right: 1em;
@@ -103,9 +125,9 @@ body {
   margin-right: 0.5em;
 }
 .status-offline { background: #888; }
-.status-connecting { background: #ffc107; }
-.status-online { background: #28a745; }
-.status-in-call { background: #f72a72; }
+.status-connecting { background: var(--sw-warning); }
+.status-online { background: var(--sw-success); }
+.status-in-call { background: var(--sw-pink); }
 
 .spinner-border.text-info {
   color: var(--sw-blue) !important;
@@ -127,3 +149,12 @@ body {
   width: 2rem !important;
   height: 2rem !important;
 }
+
+/* Text color utility classes */
+.text-info { color: var(--sw-info) !important; }
+.text-warning { color: var(--sw-warning) !important; }
+.text-success { color: var(--sw-success) !important; }
+.text-danger { color: var(--sw-danger) !important; }
+.text-primary { color: var(--sw-blue) !important; }
+.text-secondary { color: var(--sw-text-secondary) !important; }
+.text-muted { color: var(--sw-text-muted) !important; }

@@ -12,6 +12,22 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-8">
+      <!-- Overview section explaining how subscriber mode works -->
+      <div class="sw-glass p-4 rounded mb-4">
+        <h4 class="mb-3 text-center"><i class="bi bi-info-circle-fill me-2 text-info"></i>How the Agent Dashboard Works</h4>
+        
+        <div class="overview-box mb-3">
+          <p>This dashboard simulates being an agent at a contact center. When you go online:</p>
+          <ul class="feature-list">
+            <li><strong class="text-info">Your status changes to "Online"</strong> - You're added to the active subscriber pool that can receive calls</li>
+            <li><strong class="text-warning">All online subscribers</strong> - When a customer calls, all online subscribers receive the call simultaneously</li> 
+            <li><strong class="text-success">Call information</strong> - You'll see caller information and context collected by the AI</li>
+            <li><strong class="text-danger">Going offline</strong> - Removes you from the active subscriber pool and you won't receive calls</li>
+          </ul>
+          <p class="mt-2 mb-0"><strong>Try it:</strong> Go online below, then place a call from the <a href="/call" class="text-info" target="_blank">Call page</a> in another tab to see the full workflow in action!</p>
+        </div>
+      </div>
+
       <!-- Main dashboard card -->
       <div class="dashboard-card main-controls">
         <div class="d-flex flex-column align-items-center mb-3">

@@ -7,23 +7,90 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="sw-gradient-text mb-4">Context aware call transfers with AI!</h1>
+<div class="container py-4">
+    <h1 class="sw-gradient-text mb-3 text-center">Context aware call transfers with AI!</h1>
     
-    <!-- Call button -->
-    <div class="call-button-container">
-        <button id="callButton" class="demo-button demo-button-disabled d-flex align-items-center justify-content-center">
-            <span class="call-text d-flex align-items-center">
-                <i class="bi bi-telephone-fill me-2 call-icon"></i>
-                Call Now
-            </span>
-            <span class="call-loading">
-                <div class="spinner-border text-info" role="status">
-                    <span class="visually-hidden">Loading...</span>
+    <!-- Demo explanation callout -->
+    <div class="sw-glass p-4 rounded mb-4">
+        <h4 class="mb-3 text-center"><i class="bi bi-info-circle-fill me-2 text-info"></i>How this demo works</h4>
+        
+        <div class="problem-solution mb-3">
+            <p class="mb-1"><strong class="text-warning">The Problem:</strong> In traditional call centers, when a customer is transferred between agents, they often have to repeat their information multiple times. This creates frustration and wastes time.</p>
+            <p><strong class="text-info">Our Solution:</strong> This demo shows how AI can gather all necessary information upfront, then seamlessly transfer both the call <em>and</em> the context to a human agent. The agent instantly sees the customer's information and reason for calling, eliminating repetition and creating a smooth experience.</p>
+        </div>
+        
+        <div class="horizontal-divider mb-3"></div>
+        
+        <!-- Phases Section -->
+        <div class="row demo-phases mb-3">
+            <!-- Phase 1 -->
+            <div class="col-lg-6 mb-3 mb-lg-0">
+                <h5 class="mb-2"><i class="bi bi-1-circle-fill me-2"></i>Phase 1: The AI Agent Experience</h5>
+                
+                <div class="pathway mb-3">
+                    <h6 class="pathway-title"><i class="bi bi-person-check me-2"></i>Pathway A: Already a Member</h6>
+                    <ul class="demo-steps compact">
+                        <li>The AI asks for your member ID</li>
+                        <li>System verifies your identity using your ID</li>
+                        <li>The AI asks about your reason for calling</li>
+                    </ul>
                 </div>
-                <span class="loading-text">Initializing widget...</span>
-            </span>
-        </button>
+                
+                <div class="pathway">
+                    <h6 class="pathway-title"><i class="bi bi-person-plus me-2"></i>Pathway B: Become a Member</h6>
+                    <ul class="demo-steps compact">
+                        <li>You indicate you're not yet a member</li>
+                        <li>The AI offers to sign you up</li>
+                        <li>AI collects your contact and personal information</li>
+                        <li>The system creates your account</li>
+                        <li>The AI asks about your initial reason for calling</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Phase 2 -->
+            <div class="col-lg-6 position-relative">
+                <div class="vertical-divider d-none d-lg-block"></div>
+                
+                <h5 class="mb-2"><i class="bi bi-2-circle-fill me-2"></i>Phase 2: The Transfer Experience</h5>
+                <div class="pathway phase-2-card">
+                    <ul class="demo-steps compact">
+                        <li>After the AI interaction, your call gets transferred to available subscribers</li>
+                        <li><strong class="text-warning">Important:</strong> To complete the demo, you need an online subscriber</li>
+                        <li>Open a new tab, <a href="/signup" target="_blank" class="text-info">create a subscriber account</a> and go online</li>
+                        <li>This simulates a real contact center experience with an agent receiving the call</li>
+                        <li>The subscriber instantly sees your information and reason for calling</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Separate divider before the call-to-action -->
+        <div class="horizontal-divider mb-3"></div>
+        
+        <!-- Experience the Demo section - now centered and separate from phases -->
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="experience-demo-section">
+                    <h5 class="mb-2 text-center"><i class="bi bi-telephone-outbound me-2"></i>Experience the Demo</h5>
+                    <p class="mb-3">Click the button below to place a call with our AI agent and see context-aware transfers in action.</p>
+                    
+                    <!-- Call button -->
+                    <button id="callButton" class="demo-button demo-button-disabled d-flex align-items-center justify-content-center w-100">
+                        <span class="call-text d-flex align-items-center">
+                            <i class="bi bi-telephone-fill me-2 call-icon"></i>
+                            Call Now
+                        </span>
+                        <span class="call-loading">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span class="loading-text">Initializing widget...</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

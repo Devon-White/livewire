@@ -40,4 +40,216 @@
 #callButton.demo-button-disabled .loading-text {
     font-size: 0.9rem;
     color: #aaa;
+}
+
+/* Demo explanation callout styling */
+.demo-steps {
+    padding-left: 1.2rem;
+    margin-bottom: 0;
+}
+
+.demo-steps li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Compact list style for fitting more content */
+.demo-steps.compact li {
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+    font-size: 0.95rem;
+}
+
+.demo-steps li:last-child {
+    margin-bottom: 0;
+}
+
+.text-warning {
+    color: var(--sw-warning) !important;
+}
+
+.sw-glass h4 {
+    color: var(--sw-text-primary);
+    font-weight: 500;
+}
+
+.sw-glass h5 {
+    color: var(--sw-text-secondary);
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* Dividers for visual separation */
+.horizontal-divider {
+    height: 1px;
+    background: linear-gradient(90deg, 
+        var(--sw-border-light) 0%, 
+        var(--sw-border-medium) 50%, 
+        var(--sw-border-light) 100%);
+    margin: 20px 0;
+}
+
+.vertical-divider {
+    position: absolute;
+    left: 0;
+    top: 10px; /* Adjusted position */
+    bottom: 10px;
+    width: 1px;
+    background: linear-gradient(180deg, 
+        var(--sw-border-light) 0%, 
+        var(--sw-border-medium) 50%, 
+        var(--sw-border-light) 100%);
+}
+
+/* Improved layout and spacing */
+.demo-phases {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.demo-phases h5 {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+}
+
+.demo-phases h5 i {
+    color: var(--sw-info);
+    margin-right: 8px;
+}
+
+/* Ensure responsive behavior */
+@media (min-width: 992px) {
+    .col-lg-6:last-child {
+        padding-left: 25px; /* Reduced padding to save space */
+    }
+    
+    .vertical-divider {
+        display: block;
+    }
+}
+
+@media (max-width: 991px) {
+    .vertical-divider {
+        display: none;
+    }
+    
+    .horizontal-divider.mobile-only {
+        display: block;
+    }
+}
+
+/* Problem-solution section styling */
+.problem-solution {
+    background: var(--sw-bg-dark);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--sw-border-light);
+}
+
+.problem-solution p {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.problem-solution strong {
+    font-weight: 600;
+}
+
+.problem-solution em {
+    font-style: italic;
+    color: var(--sw-blue);
+}
+
+/* Experience the demo section styling */
+.experience-demo-section {
+    background: var(--sw-bg-dark);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid var(--sw-border-medium);
+    box-shadow: 0 4px 15px var(--sw-shadow-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle gradient accent */
+.experience-demo-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--sw-gradient);
+}
+
+.experience-demo-section h5 {
+    color: var(--sw-pink); /* Pink color to draw attention */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.experience-demo-section p {
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    color: var(--sw-text-secondary);
+    text-align: center;
+    font-size: 1rem;
+}
+
+.experience-demo-section .demo-button {
+    width: 100%;
+    transition: transform 0.2s ease;
+}
+
+.experience-demo-section .demo-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Pathway styling */
+.pathway {
+    background: var(--sw-bg-light);
+    border-radius: 8px;
+    padding: 12px;
+    border-left: 3px solid var(--sw-border-medium);
+}
+
+.pathway.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.pathway-title {
+    color: var(--sw-text-secondary);
+    font-size: 1rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.pathway:first-of-type {
+    border-left-color: var(--sw-blue); /* Blue for existing members */
+}
+
+.pathway:last-of-type {
+    border-left-color: var(--sw-pink); /* Pink for new members */
+}
+
+/* Phase 2 card styling */
+.phase-2-card {
+    border-left-color: var(--sw-blue); /* Blue for transfer phase */
+    min-height: calc(100% - 45px); /* Fill available space but leave room for heading */
+    display: flex;
+    align-items: center;
+}
+
+.phase-2-card ul {
+    margin: 0;
 } 

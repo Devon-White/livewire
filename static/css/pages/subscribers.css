@@ -24,9 +24,42 @@
   margin-top: 1em;
 }
 .agent-email {
-  color: #e0e6f0;
+  color: var(--sw-text-secondary);
   font-size: 0.98em;
   letter-spacing: 0.01em;
+}
+
+/* Overview section styling */
+.overview-box {
+  background: var(--sw-bg-dark);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid var(--sw-border-light);
+}
+
+.overview-box p {
+  color: var(--sw-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.feature-list {
+  padding-left: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.feature-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  color: var(--sw-text-secondary);
+}
+
+.feature-list li:last-child {
+  margin-bottom: 0;
+}
+
+.feature-list li strong {
+  font-weight: 600;
 }
 
 /* Modal styles moved from subscriber.html */
@@ -37,7 +70,7 @@
   background: rgba(12,19,57,0.85) !important;
 }
 .modal-content {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  box-shadow: 0 8px 32px var(--sw-shadow-color);
 }
 
 /* Ensure all modal text wraps and does not overflow, regardless of element */
