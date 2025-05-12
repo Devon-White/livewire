@@ -94,8 +94,9 @@ def index() -> str:
             clear_session()
             return render_template("pages/index.html.jinja")
 
-        # Load existing SWML handler ID from file if it exists
+        # Load existing SWML handler ID from file if it exists, or create one if missing
         swml_id_path = os.path.join(os.getcwd(), "swml_id.txt")
+        swml_id = None
         if os.path.exists(swml_id_path):
             try:
                 with open(swml_id_path, "r") as f:
@@ -105,14 +106,42 @@ def index() -> str:
                         logger.info(f"Loaded SWML ID from file: {swml_id}")
             except Exception as e:
                 logger.warning(f"Failed to load SWML ID from file: {e}")
+        
+        # If no swml_id, create a new handler
+        if not swml_id:
+            try:
+                public_url = os.environ.get("PUBLIC_URL")
+                if not public_url and hasattr(client, 'app') and hasattr(client.app, 'config'):
+                    public_url = client.app.config.get("PUBLIC_URL")
+                if not public_url:
+                    # Fallback: try to guess from request
+                    public_url = request.host_url.rstrip('/')
+                handler_name = "LiveWire"
+                request_url = f"{public_url}/api/swml"
+                handler = client.create_swml_handler(handler_name, request_url)
+                swml_id = handler.get("id")
+                if swml_id:
+                    # Write to file
+                    with open(swml_id_path, "w") as f:
+                        f.write(swml_id)
+                    set_swml_handler_info(swml_id)
+                    logger.info(f"Created new SWML handler and saved ID: {swml_id}")
+                else:
+                    logger.error("Failed to create SWML handler: No ID returned.")
+                    flash("Failed to create SWML handler. Please try again later.")
+                    return render_template("pages/index.html.jinja")
+            except Exception as e:
+                logger.error(f"Error creating SWML handler: {e}")
+                flash(f"Error creating SWML handler: {e}")
+                return render_template("pages/index.html.jinja")
 
         # Verify credentials and redirect
-        if has_sw_credentials():
-            logger.info("Credentials set successfully, redirecting to call page")
+        if has_sw_credentials() and swml_id:
+            logger.info("Credentials and SWML handler set, redirecting to call page")
             return redirect(url_for("html.call_page"))
         else:
-            logger.error("Failed to set credentials in session")
-            flash("Failed to save credentials. Please try again.")
+            logger.error("Failed to set credentials or SWML handler in session")
+            flash("Failed to save credentials or create SWML handler. Please try again.")
             return render_template("pages/index.html.jinja")
 
     # For debugging
